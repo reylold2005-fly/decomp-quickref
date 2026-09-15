@@ -1,0 +1,21 @@
+{
+  "name": "释压应急程序速查(程三土版)",
+  "short_name": "释压速查",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0e141d",
+  "theme_color": "#0b62d6",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
