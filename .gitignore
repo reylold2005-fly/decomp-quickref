@@ -1,0 +1,4 @@
+.DS_Store
+dist/
+archify/dg-*.html
+__pycache__/

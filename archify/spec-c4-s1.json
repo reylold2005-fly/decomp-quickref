@@ -1,0 +1,161 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "D527-1 ① NONAR–SERNA 释压决策",
+    "locale": "zh-CN",
+    "animation": "trace",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "event",
+      "label": "释压事件"
+    },
+    {
+      "id": "now",
+      "label": "立即处置(同时完成)"
+    },
+    {
+      "id": "opt1",
+      "label": "方案①"
+    },
+    {
+      "id": "opt2",
+      "label": "方案②"
+    }
+  ],
+  "mainPath": [
+    "decomp",
+    "memo",
+    "descend",
+    "decide",
+    "o1",
+    "land"
+  ],
+  "nodes": [
+    {
+      "id": "decomp",
+      "lane": "event",
+      "col": 0,
+      "type": "security",
+      "label": "座舱释压",
+      "sublabel": "航段 NONAR–SERNA",
+      "width": 119
+    },
+    {
+      "id": "memo",
+      "lane": "now",
+      "col": 1,
+      "type": "backend",
+      "label": "氧气面罩 · 建立联系",
+      "sublabel": "记忆项目",
+      "width": 165
+    },
+    {
+      "id": "descend",
+      "lane": "now",
+      "col": 2,
+      "type": "security",
+      "label": "应急下降 13000FT",
+      "sublabel": "Vmo/Mmo · 7700 · MAYDAY",
+      "width": 170
+    },
+    {
+      "id": "decide",
+      "lane": "now",
+      "col": 3,
+      "type": "frontend",
+      "label": "评估位置 / 油量 / 天气",
+      "sublabel": "选择方案",
+      "width": 180
+    },
+    {
+      "id": "o1",
+      "lane": "opt1",
+      "col": 4,
+      "type": "cloud",
+      "label": "北至SERNA / 南至NONAR 降 10000",
+      "sublabel": "沿黑/蓝航路备降 ZMCK",
+      "width": 239
+    },
+    {
+      "id": "o2",
+      "lane": "opt2",
+      "col": 4,
+      "type": "cloud",
+      "label": "南至 NONAR 降 10000",
+      "sublabel": "沿黑/蓝航路备降 ZBAA",
+      "width": 164
+    },
+    {
+      "id": "land",
+      "lane": "opt1",
+      "col": 5,
+      "type": "database",
+      "label": "落地备降场",
+      "sublabel": "完成检查单",
+      "width": 110
+    }
+  ],
+  "edges": [
+    {
+      "from": "decomp",
+      "to": "memo",
+      "variant": "emphasis",
+      "label": "立即"
+    },
+    {
+      "from": "memo",
+      "to": "descend",
+      "variant": "emphasis",
+      "label": "同时"
+    },
+    {
+      "from": "descend",
+      "to": "decide",
+      "variant": "emphasis"
+    },
+    {
+      "from": "decide",
+      "to": "o1",
+      "variant": "emphasis",
+      "label": "优先"
+    },
+    {
+      "from": "decide",
+      "to": "o2",
+      "role": "branch"
+    },
+    {
+      "from": "o1",
+      "to": "land",
+      "variant": "emphasis"
+    },
+    {
+      "from": "o2",
+      "to": "land",
+      "role": "branch"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "高度要点",
+      "items": [
+        "本航段初始应急下降高度 13000FT(Vmo/Mmo)",
+        "北至SERNA / 南至NONAR 降 10000:沿黑/蓝航路备降 ZMCK",
+        "南至 NONAR 降 10000:沿黑/蓝航路备降 ZBAA"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "使用限制",
+      "items": [
+        "适用:氧气系统适用性见原图",
+        "仅供参考学习,以公司现行有效版本为准",
+        "原图 D527-1 · EFF 2026-01-28 · ① 号航段"
+      ]
+    }
+  ]
+}

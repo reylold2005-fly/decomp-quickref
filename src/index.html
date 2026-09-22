@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0b62d6">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>释压应急程序速查 · 程三土版</title>
+<style>
+:root{
+  --bg:#f4f6f9; --panel:#ffffff; --ink:#1a2332; --ink2:#5a6a80; --line:#dde4ee;
+  --accent:#0b62d6; --accent-soft:#e8f1fd;
+  --red:#d6244a; --red-soft:#fdeaee;
+  --amber:#b26a00; --amber-soft:#fff3dd;
+  --green:#0a7d4f; --green-soft:#e3f5ec; --blue-apt:#1b4fd8;
+  --route:#d6244a; --divert:#d6244a; --divert-blue:#1b4fd8;
+  --card-shadow:0 1px 3px rgba(20,35,60,.08),0 6px 18px rgba(20,35,60,.06);
+  --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+html.dark{
+  --bg:#0e141d; --panel:#182130; --ink:#e8edf5; --ink2:#93a2b8; --line:#2a3648;
+  --accent:#5aa2ff; --accent-soft:#173154;
+  --red:#ff6684; --red-soft:#3a1622;
+  --amber:#ffb84d; --amber-soft:#3a2c10;
+  --green:#4dd39a; --green-soft:#123526; --blue-apt:#7aa5ff;
+  --route:#ff5a7c; --divert:#ff5a7c; --divert-blue:#7aa5ff;
+  --card-shadow:0 1px 3px rgba(0,0,0,.4),0 8px 22px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;padding-bottom:60px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 14px}
+header.app{position:sticky;top:0;z-index:50;background:var(--panel);border-bottom:1px solid var(--line);box-shadow:0 1px 6px rgba(0,0,0,.05)}
+header.app .bar{display:flex;align-items:center;gap:10px;padding:10px 14px;max-width:1180px;margin:0 auto}
+.logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent),#5a3bd6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex:none}
+h1{font-size:17px;margin:0;font-weight:700;letter-spacing:.5px}
+.sub{font-size:11.5px;color:var(--ink2)}
+.spacer{flex:1}
+.pill{font-size:11px;padding:3px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-weight:600;white-space:nowrap}
+button.icon{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:9px;width:34px;height:34px;font-size:16px;cursor:pointer}
+.disclaimer{background:var(--amber-soft);color:var(--amber);font-size:12px;text-align:center;padding:5px 12px;font-weight:600}
+.tabs{display:flex;gap:8px;padding:10px 14px 0;max-width:1180px;margin:0 auto;flex-wrap:wrap}
+.tab{border:1.5px solid var(--line);background:var(--panel);color:var(--ink2);border-radius:10px 10px 0 0;padding:8px 16px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:var(--mono);letter-spacing:.5px}
+.tab.active{border-color:var(--red);border-bottom-color:var(--panel);color:var(--red);background:var(--panel)}
+main{margin-top:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--card-shadow);padding:14px 16px;margin-bottom:14px}
+.card h2{font-size:14px;margin:0 0 10px;color:var(--ink2);font-weight:700;letter-spacing:1px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h2 .n{display:inline-flex;width:20px;height:20px;border-radius:6px;background:var(--accent);color:#fff;font-size:12px;align-items:center;justify-content:center}
+.loc-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.loc-row .fld{flex:1;min-width:150px;position:relative}
+.fld label{font-size:11px;color:var(--ink2);display:block;margin-bottom:3px;font-weight:600}
+.fld input{width:100%;font-size:20px;font-family:var(--mono);font-weight:700;letter-spacing:2px;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);text-transform:uppercase;outline:none}
+.fld input:focus{border-color:var(--accent)}
+.sugg{position:absolute;left:0;right:0;top:100%;z-index:30;background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-top:4px;box-shadow:var(--card-shadow);overflow:hidden;display:none}
+.sugg div{padding:8px 14px;font-family:var(--mono);font-weight:700;letter-spacing:2px;cursor:pointer;font-size:15px}
+.sugg div span{font-size:11px;color:var(--ink2);letter-spacing:0;font-family:inherit}
+.sugg div:hover{background:var(--accent-soft);color:var(--accent)}
+.arrow{font-size:20px;color:var(--ink2);align-self:flex-end;padding-bottom:10px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.chip{border:1.5px solid var(--line);background:var(--bg);border-radius:99px;padding:6px 13px;font-size:13px;cursor:pointer;color:var(--ink);font-weight:600;font-family:var(--mono);letter-spacing:1px}
+.chip .seq{color:var(--red);margin-right:4px;font-weight:800}
+.chip.active{border-color:var(--red);background:var(--red-soft);color:var(--red)}
+.chartbox{overflow-x:auto;-webkit-overflow-scrolling:touch}
+svg.rt{min-width:820px;width:100%;height:auto;display:block}
+.leg{stroke:var(--route);stroke-width:4;fill:none;cursor:pointer}
+.leg.dark{stroke:var(--ink);cursor:default}
+.leg.dim{opacity:.35}
+.leg.active{stroke-width:6;filter:drop-shadow(0 0 4px var(--route))}
+.leg-hit{stroke:transparent;stroke-width:26;fill:none;cursor:pointer}
+.dv{stroke:var(--divert);stroke-width:1.8;stroke-dasharray:7 5;fill:none;opacity:.75}
+.dv.blue{stroke:var(--divert-blue)}
+.dv.hl{stroke-width:3.4;opacity:1;filter:drop-shadow(0 0 3px var(--divert))}
+.fixdot{fill:var(--ink)}
+.fixlbl{font:700 15px var(--mono);fill:var(--ink);letter-spacing:1px}
+.fixlbl.red{fill:var(--red)}
+.awy{font:600 11px var(--mono);fill:var(--ink2)}
+.dist{font:600 11px var(--mono);fill:var(--ink2)}
+.dist.q{fill:var(--amber)}
+.apt-i{fill:none;stroke:var(--blue-apt);stroke-width:2}
+.aptlbl{font:700 14px var(--mono);fill:var(--blue-apt);letter-spacing:1px;cursor:pointer}
+.aptlbl.hl{fill:var(--red)}
+.msab{fill:var(--panel);stroke:var(--line);rx:6}
+.msat{font:700 12px sans-serif;fill:var(--ink)}
+.seqmark{font:800 15px sans-serif;fill:var(--red);cursor:pointer}
+.plane{fill:var(--accent);stroke:#fff;stroke-width:.8}
+.evt{fill:var(--red)}
+.evtlbl{font:800 13px sans-serif;fill:var(--red)}
+@keyframes pulse{0%{opacity:1;r:6}70%{opacity:0;r:20}100%{opacity:0;r:20}}
+.pulse{animation:pulse 1.6s ease-out infinite;fill:none;stroke:var(--red);stroke-width:2.5}
+.notesbox{background:var(--accent-soft);border:1px solid var(--accent);border-radius:10px;padding:8px 13px;font-size:12.5px;color:var(--ink);margin-top:10px}
+.notesbox b{color:var(--accent)}
+.seg-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.seg-seq{width:30px;height:30px;border-radius:50%;background:var(--red);color:#fff;font-weight:800;font-size:16px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.seg-title{font-size:19px;font-weight:800;font-family:var(--mono);letter-spacing:1.5px}
+.seg-meta{font-size:11.5px;color:var(--ink2)}
+.descent{display:flex;align-items:baseline;gap:10px;background:var(--red-soft);border:1.5px solid var(--red);border-radius:12px;padding:10px 16px;margin:10px 0}
+.descent .dn{font-size:15px;font-weight:700;color:var(--red)}
+.descent .alt{font-size:34px;font-weight:900;font-family:var(--mono);color:var(--red);letter-spacing:1px}
+.descent .u{font-size:15px;font-weight:700;color:var(--red)}
+.descent .spd{font-size:13px;color:var(--red);font-weight:600;margin-left:auto}
+.opt{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:9px 0;background:var(--bg)}
+.opt-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.opt-n{width:24px;height:24px;border-radius:50%;border:2px solid var(--accent);color:var(--accent);font-weight:800;font-size:13px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.opt-sum{font-size:15px;font-weight:700}
+.opt-alt-chip{font-family:var(--mono);font-size:12px;font-weight:700;background:var(--accent-soft);color:var(--accent);border-radius:7px;padding:2px 8px;letter-spacing:1px}
+.opt-alt-chip.lvl{background:var(--red-soft);color:var(--red)}
+.warn-chip{font-size:11px;font-weight:700;background:var(--amber-soft);color:var(--amber);border-radius:7px;padding:2px 8px}
+.opt-raw{font-size:13px;color:var(--ink2);margin-top:6px;padding-left:33px}
+.opt-acts{display:flex;gap:8px;margin-top:8px;padding-left:33px;flex-wrap:wrap}
+.btn{border:1.5px solid var(--accent);background:var(--panel);color:var(--accent);border-radius:9px;padding:5px 14px;font-size:13px;font-weight:700;cursor:pointer}
+.btn.solid{background:var(--accent);color:#fff}
+.btn.ghost{border-color:var(--line);color:var(--ink2)}
+.btn:active{transform:scale(.97)}
+.profile-lbl{font:600 11px var(--mono);fill:var(--ink2)}
+.profile-alt{font:800 16px var(--mono);fill:var(--accent)}
+.prof-line{stroke:var(--accent);stroke-width:3;fill:none}
+.prof-grid{stroke:var(--line);stroke-width:1;stroke-dasharray:4 4}
+details.sec{border:1px solid var(--line);border-radius:12px;margin:10px 0;background:var(--panel)}
+details.sec>summary{padding:10px 14px;font-weight:700;font-size:14px;cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
+details.sec>summary::after{content:"▸";margin-left:auto;color:var(--ink2);transition:transform .2s}
+details.sec[open]>summary::after{transform:rotate(90deg)}
+details.sec .inner{padding:4px 14px 14px}
+iframe.dg{width:100%;height:560px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.rvsm-warn{background:var(--amber-soft);border:1.5px solid var(--amber);color:var(--amber);border-radius:10px;padding:9px 13px;font-size:13px;font-weight:700;margin-bottom:10px}
+.rvsm-step{display:flex;gap:10px;margin:9px 0;align-items:flex-start}
+.rvsm-step .k{width:26px;height:26px;flex:none;border-radius:8px;background:var(--accent);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:13px}
+.rvsm-step b{font-size:14px}
+.rvsm-step p{margin:2px 0 0;font-size:13px;color:var(--ink2)}
+.src{font-size:11px;color:var(--ink2);margin-top:2px}
+table.chk{width:100%;border-collapse:collapse;font-size:12.5px}
+table.chk th,table.chk td{border:1px solid var(--line);padding:5px 8px;text-align:left}
+table.chk th{background:var(--bg);font-size:11.5px;color:var(--ink2)}
+.conf-l{color:var(--amber);font-weight:700}
+.conf-h{color:var(--green);font-weight:700}
+footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink2);padding:0 14px}
+.hint{font-size:12.5px;color:var(--ink2)}
+.apt-panel .row{display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px dashed var(--line);font-size:13.5px;flex-wrap:wrap}
+.apt-panel .row:last-child{border-bottom:none}
+.chartbadge{font-family:var(--mono);font-size:10.5px;font-weight:700;background:var(--green-soft);color:var(--green);border-radius:6px;padding:1px 6px}
+@media(max-width:700px){
+  .seg-title{font-size:16px}
+  .descent .alt{font-size:27px}
+  iframe.dg{height:440px}
+}
+</style>
+</head>
+<body>
+<header class="app">
+  <div class="bar">
+    <div class="logo">✈</div>
+    <div>
+      <h1>释压应急程序速查 <span style="font-size:12px;color:var(--accent)">程三土版</span></h1>
+      <div class="sub">D501 · D527 · D574 系列</div>
+    </div>
+    <div class="spacer"></div>
+    <span class="pill" id="effPill"></span>
+    <button class="icon" id="themeBtn" title="切换深浅色">◐</button>
+  </div>
+  <div class="disclaimer">⚠ 仅供参考学习 · 运行中一切以公司现行有效版本程序简令为准</div>
+  <nav class="tabs" id="chartTabs"></nav>
+</header>
+
+<main class="wrap">
+
+  <section class="card">
+    <h2><span class="n">1</span>我在哪 —— 输入前后航路点(跨图自动切换),或点选航段</h2>
+    <div class="loc-row">
+      <div class="fld">
+        <label>已飞过 / 靠后的点</label>
+        <input id="fixA" placeholder="如 OKTAT" autocomplete="off" spellcheck="false">
+        <div class="sugg" id="suggA"></div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="fld">
+        <label>将飞往 / 靠前的点</label>
+        <input id="fixB" placeholder="如 BEKIR" autocomplete="off" spellcheck="false">
+        <div class="sugg" id="suggB"></div>
+      </div>
+      <button class="btn solid" id="goBtn" style="align-self:flex-end;height:44px">查程序</button>
+    </div>
+    <div class="chips" id="segChips"></div>
+  </section>
+
+  <section class="card">
+    <h2><span class="n">2</span>航路示意图(仿原图布局 · 点航段或机场可交互)<span class="pill" id="chartPill"></span></h2>
+    <div class="chartbox"><svg class="rt" id="rtSvg" viewBox="0 0 1560 520"></svg></div>
+    <div class="hint">红实线=航路(圈号=程序航段) · 黑实线=图上黑色航段 · 红虚线=备降路径 · 蓝虚线=原图蓝色连线 · 距离标注:海里(括号内为该线段最低安全高度,单位米,含义待最终确认) · <span style="color:var(--amber);font-weight:700">琥珀色数字=待复核</span></div>
+    <div class="notesbox" id="chartNotes" style="display:none"></div>
+  </section>
+
+  <section id="segCards"></section>
+
+  <section class="card" id="animCard" style="display:none">
+    <h2><span class="n">▶</span>飞行演示 —— <span id="animTitle" style="color:var(--ink)"></span></h2>
+    <svg id="profSvg" viewBox="0 0 860 250" style="width:100%;height:auto"></svg>
+    <div class="opt-acts" style="padding-left:0">
+      <button class="btn solid" id="replayBtn">↻ 重播</button>
+      <button class="btn ghost" id="speedBtn">速度 1×</button>
+      <span class="hint" style="align-self:center">上方航路图同步演示平面轨迹,此处为高度剖面。演示为示意,非精确性能剖面。</span>
+    </div>
+  </section>
+
+  <section class="card apt-panel">
+    <h2><span class="n">4</span>备降场反查 —— 点机场看哪些航段可用它(全部航图)</h2>
+    <div class="chips" id="aptChips"></div>
+    <div id="aptResult" class="hint" style="margin-top:10px">点选上方机场代码。</div>
+  </section>
+
+  <section class="card">
+    <h2><span class="n">5</span>RVSM 空域应急脱离程序(通用框架)</h2>
+    <div class="rvsm-warn">⚠ 占位内容:依据 ICAO Doc 4444 §15.2 及 Doc 7030(EUR)公开资料整理,<u>尚未与公司运行手册核对</u>,禁止作为运行依据。收到公司手册页后将替换为公司版本。</div>
+    <div class="rvsm-step"><div class="k">1</div><div><b>戴好氧气面罩,建立机组联系</b><p>释压后立即完成记忆项目;确认座舱高度与氧气流量。</p></div></div>
+    <div class="rvsm-step"><div class="k">2</div><div><b>应急下降,同时对外通告</b><p>应答机 <b style="color:var(--red)">7700</b> · 121.5 及当前频率通播 <b>MAYDAY</b>:呼号、位置、通过高度、下降至的高度、意图。</p></div></div>
+    <div class="rvsm-step"><div class="k">3</div><div><b>脱离航路中心线</b><p>无法取得许可时先行机动:初始转向脱离航迹,建立与航路平行约 <b>5 NM(9.3 km)</b> 的偏置后继续下降(方向结合地形/相邻航路/交通选择)。<span class="conf-l">具体偏置量与转向要求以所在FIR现行AIP及公司手册为准 —— 待核对</span></p></div></div>
+    <div class="rvsm-step"><div class="k">4</div><div><b>打开全部外部灯光,监视 TCAS</b><p>注意穿越下方RVSM高度层时的冲突;利用TCAS TA/RA辅助目视警戒。</p></div></div>
+    <div class="rvsm-step"><div class="k">5</div><div><b>改平后尽快恢复通信、取得ATC许可</b><p>报告最终高度与意图,按本页对应航段程序落实备降。</p></div></div>
+    <p class="src">涉及FIR:巴库(UBBA)、第比利斯(UGGG)、安卡拉(LTAA)——均为ICAO EUR区域,原则上执行 Doc 4444 标准特情程序;各国AIP差异待逐一核对后在此标注。<br>来源:ICAO Doc 4444 PANS-ATM §15.2、Doc 7030 EUR SUPPs。</p>
+  </section>
+
+  <section class="card">
+    <h2><span class="n">6</span>各航段决策流程动图(archify 生成)<span class="pill" id="dgPill"></span></h2>
+    <div id="dgList"></div>
+  </section>
+
+  <details class="sec card" style="padding:0">
+    <summary>📋 数据核对清单(v0.2)</summary>
+    <div class="inner" id="chkList"></div>
+  </details>
+
+</main>
+
+<footer>
+  数据源:D501(修订 俞快 / 校核 刘政东 · EFF 2026-01-28)· D527-1(修订 杨烨坤 / 校核 戈葆尔 · EFF 2026-01-28)· D574-1/2(修订 黄健、丁婕 / 校核 季彤彤 · EFF 2026-04-21)· 性能值班 021-22379864<br>
+  <b>程三土版</b> v0.6 · 离线单文件 · 仅供参考学习,以公司现行有效版本为准
+</footer>
+
+<!-- ═══════════════ 数据区:换版只改这里 ═══════════════ -->
+<script id="DATA" type="application/json">
+{
+  "charts": [
+    {
+      "id": "D501",
+      "key": "c3",
+      "tab": "D501 POLHO–ABK/LOBIR/IVRAS/DEKAN · 12min",
+      "title": "POLHO-ABK_LOBIR_IVRAS_DEKAN释压飘降应急程序",
+      "oxygen": "AB · 12分钟氧气系统",
+      "eff": "2026-01-28",
+      "page": "",
+      "linear": false,
+      "notes": [
+        "D70T:沿TR导航台316°航向,沿A308航路70海里处。",
+        "D208G:沿GINOM导航台307°航向,沿R104航路208海里处。"
+      ],
+      "route": ["POLHO","UDA","TOVMO","GINOM","TR","KZL","DARNO","LOBIR","DEKAN","TISUP","D70T","D208G","KESUM","IVRAS","ABUSA","MATAK","NEBOK","BD","MIKET","ROGMA","ABK","LETBI","ATMOL","AMUTA"],
+      "fixes": {
+        "IVRAS": [465,109,"r"], "MIKET": [299,153], "ROGMA": [225,174], "ABK": [253,211,"r"],
+        "D208G": [364,232,"a","red"], "D70T": [316,250,"l","red"], "TISUP": [249,303], "DEKAN": [83,284,"b"],
+        "KESUM": [604,254,"b"], "NEBOK": [753,194], "BD": [873,211], "ABUSA": [814,254,"b"],
+        "MATAK": [933,257], "ATMOL": [1177,257], "LETBI": [984,284,"r"], "AMUTA": [1178,300,"r"],
+        "TOVMO": [1026,334,"r"], "UDA": [1188,388,"b"], "POLHO": [1465,431,"b"], "GINOM": [677,321,"b"],
+        "TR": [424,329], "KZL": [371,407,"b"], "LOBIR": [73,405,"b"], "DARNO": [696,441,"b"]
+      },
+      "airports": {
+        "UNKL": {"xy":[141,152], "name":"克拉斯诺亚尔斯克"},
+        "UNAA": {"xy":[230,198], "name":"阿巴坎"},
+        "UNNT": {"xy":[107,225], "name":"新西伯利亚"},
+        "UIII": {"xy":[1017,174],"name":"伊尔库茨克"},
+        "ZMCK": {"xy":[1259,371],"name":"乌兰巴托"}
+      },
+      "legs": [
+        {"from":"LOBIR","to":"KZL","awy":"A575","dist":"216 (3353)","seg":2},
+        {"from":"KZL","to":"DARNO","awy":"A575","dist":"171 (3540)","seg":1},
+        {"from":"KZL","to":"TR","awy":"R480","dist":"35 (3171)","seg":0},
+        {"from":"DARNO","to":"TR","awy":"P982","dist":"197 (3750)","seg":3},
+        {"from":"TR","to":"D70T","awy":"A308","dist":"70 (3200)","seg":3},
+        {"from":"TR","to":"TISUP","awy":"L158","dist":"100 (3353)","seg":6},
+        {"from":"TISUP","to":"DEKAN","awy":"L158","dist":"95 (3353)","seg":6},
+        {"from":"GINOM","to":"TR","awy":"A308","dist":"163 (3476)","seg":5},
+        {"from":"TOVMO","to":"GINOM","awy":"Y684","dist":"241 (4020)","seg":4},
+        {"from":"KESUM","to":"D208G","awy":"R104","dist":"208 (3628)","seg":10},
+        {"from":"GINOM","to":"KESUM","awy":"","dist":"","seg":10},
+        {"from":"KESUM","to":"IVRAS","awy":"R372","dist":"147 (3415)","seg":9},
+        {"from":"KESUM","to":"ABUSA","awy":"R229","dist":"238 (3871)","seg":8},
+        {"from":"ABUSA","to":"MATAK","awy":"R229","dist":"80 (3871)","seg":7},
+        {"from":"ABK","to":"D70T","awy":"","dist":"","seg":0,"color":"dark"},
+        {"from":"MATAK","to":"ATMOL","awy":"R229","dist":"","seg":0,"color":"dark"},
+        {"from":"ATMOL","to":"AMUTA","awy":"","dist":"","seg":0,"color":"dark"},
+        {"from":"AMUTA","to":"UDA","awy":"R372","dist":"","seg":0,"color":"dark"},
+        {"from":"TOVMO","to":"UDA","awy":"Y684","dist":"","seg":0,"color":"dark"},
+        {"from":"UDA","to":"POLHO","awy":"Y345","dist":"","seg":0,"color":"dark"},
+        {"from":"DARNO","to":"UDA","awy":"A575","dist":"","seg":0,"color":"dark"}
+      ],
+      "diversions": [
+        {"from":"KESUM","to":"NEBOK","label":"228 (3287)"},
+        {"from":"NEBOK","to":"ABUSA","label":"115 (3834)"},
+        {"from":"MIKET","to":"IVRAS","label":"","style":"blue"},
+        {"from":"ROGMA","to":"MIKET","label":"","style":"blue"},
+        {"from":"UNKL","to":"ROGMA","label":"","style":"blue"},
+        {"from":"ABK","to":"MIKET","label":"","style":"blue"},
+        {"from":"UNAA","to":"UNNT","label":"","style":"blue","unsure":true},
+        {"from":"MIKET","to":"NEBOK","label":"","style":"blue","unsure":true},
+        {"from":"NEBOK","to":"BD","label":"","style":"blue"},
+        {"from":"BD","to":"UIII","label":"","style":"blue"},
+        {"from":"MATAK","to":"LETBI","label":"","style":"blue"},
+        {"from":"LETBI","to":"TOVMO","label":"","style":"blue"},
+        {"from":"UDA","to":"ZMCK","label":"","style":"blue"}
+      ],
+      "msa": [],
+      "segments": [
+        {
+          "seq":1,"from":"DARNO","to":"KZL","initAlt":13000,
+          "options":[
+            {"n":1,"sum":"经KZL沿R480·TR·A308,过D70T以西降10000,备降","alts":["UNAA","UNNT"],"lvl":10000,
+             "raw":"沿航路飞至KZL,沿R480 TR A308,过D70T点以西下降高度10000ft,备降UNAA/UNNT;",
+             "anim":[["EVT",35000],["EVT>KZL:0.4",13000],["KZL",13000],["TR",13000],["D70T",13000],["D70T>UNAA:0.4",10000],["UNAA",0]],
+             "animAlt":{"UNNT":[["EVT",35000],["EVT>KZL:0.4",13000],["KZL",13000],["TR",13000],["D70T",13000],["D70T>UNNT:0.4",10000],["UNNT",0]]}},
+            {"n":2,"sum":"经KZL·D70T以西降10000,沿MIKET·NEBOK·BD备降","alts":["UIII"],"lvl":10000,
+             "raw":"或沿航路飞至KZL,沿R480 TR A308 ABK,过D70T点以西下降高度10000ft,沿航路经MIKET NEBOK BD 备降UIII;",
+             "anim":[["EVT",35000],["EVT>KZL:0.4",13000],["KZL",13000],["TR",13000],["D70T",13000],["ABK",10000],["MIKET",10000],["NEBOK",10000],["BD",10000],["UIII",0]]},
+            {"n":3,"sum":"经KZL·D70T以西降10000,沿MIKET·ROGMA备降","alts":["UNKL"],"lvl":10000,
+             "raw":"或沿航路飞至KZL,沿R480 TR A308 ABK,过D70T点以西下降高度10000ft,沿路经 MIKET ROGMA备降UNKL。",
+             "anim":[["EVT",35000],["EVT>KZL:0.4",13000],["KZL",13000],["TR",13000],["D70T",13000],["ABK",10000],["MIKET",10000],["ROGMA",10000],["UNKL",0]]}
+          ]
+        },
+        {
+          "seq":2,"from":"KZL","to":"LOBIR","initAlt":13000,
+          "options":[
+            {"n":1,"sum":"至LOBIR后降10000,沿航路备降","alts":["UNAA","UNNT"],"lvl":10000,
+             "raw":"沿航路飞至LOBIR点后下降高度10000ft,沿航路备降UNAA/UNNT;",
+             "anim":[["EVT",35000],["EVT>LOBIR:0.4",13000],["LOBIR",13000],["LOBIR>UNAA:0.3",10000],["UNAA",0]],
+             "animAlt":{"UNNT":[["EVT",35000],["EVT>LOBIR:0.4",13000],["LOBIR",13000],["LOBIR>UNNT:0.3",10000],["UNNT",0]]}},
+            {"n":2,"sum":"至LOBIR后降10000,经ABK·MIKET·NEBOK·BD备降","alts":["UIII"],"lvl":10000,
+             "raw":"或沿航路飞至LOBIR点后下降高度10000ft,沿航路经 ABK MIKET NEBOK BD 备降UIII;",
+             "anim":[["EVT",35000],["EVT>LOBIR:0.4",13000],["LOBIR",13000],["ABK",10000],["MIKET",10000],["NEBOK",10000],["BD",10000],["UIII",0]]},
+            {"n":3,"sum":"至LOBIR后降10000,经ABK·MIKET·ROGMA备降","alts":["UNKL"],"lvl":10000,
+             "raw":"或沿航路飞至LOBIR点后下降高度10000ft,沿航路经ABK MIKET ROGMA备降UNKL。",
+             "anim":[["EVT",35000],["EVT>LOBIR:0.4",13000],["LOBIR",13000],["ABK",10000],["MIKET",10000],["ROGMA",10000],["UNKL",0]]}
+          ]
+        },
+        {
+          "seq":3,"from":"DARNO","to":"D70T","via":["TR"],"initAlt":13000,
+          "options":[
+            {"n":1,"sum":"至D70T以西降10000,备降","alts":["UNAA","UNNT"],"lvl":10000,
+             "raw":"沿航路飞至D70T以西下降高度10000ft,备降UNAA/UNNT;",
+             "anim":[["EVT",35000],["EVT>D70T:0.5",13000],["D70T",13000],["D70T>UNAA:0.4",10000],["UNAA",0]],
+             "animAlt":{"UNNT":[["EVT",35000],["EVT>D70T:0.5",13000],["D70T",13000],["D70T>UNNT:0.4",10000],["UNNT",0]]}},
+            {"n":2,"sum":"至D70T以西降10000,经MIKET·NEBOK·BD备降","alts":["UIII"],"lvl":10000,
+             "raw":"或沿航路飞至D70T以西下降高度10000ft,沿航路经MIKET NEBOK BD 备降UIII;",
+             "anim":[["EVT",35000],["EVT>D70T:0.5",13000],["D70T",13000],["MIKET",10000],["NEBOK",10000],["BD",10000],["UIII",0]]},
+            {"n":3,"sum":"至D70T以西降10000,经MIKET·ROGMA备降","alts":["UNKL"],"lvl":10000,
+             "raw":"或沿航路飞至D70T以西下降高度10000ft,沿航路经MIKET ROGMA备降UNKL。",
+             "anim":[["EVT",35000],["EVT>D70T:0.5",13000],["D70T",13000],["MIKET",10000],["ROGMA",10000],["UNKL",0]]}
+          ]
+        },
+        {
+          "seq":4,"from":"TOVMO","to":"GINOM","initAlt":14000,"altNote":"原图红字 14000ft",
+          "options":[
+            {"n":1,"sum":"至TOVMO降10000,备降","alts":["ZMCK"],"lvl":10000,
+             "raw":"沿航路飞至TOVMO,下降高度10000ft,备降ZMCK;",
+             "anim":[["EVT",35000],["EVT>TOVMO:0.4",14000],["TOVMO",14000],["TOVMO>ZMCK:0.4",10000],["ZMCK",0]]},
+            {"n":2,"sum":"至TOVMO降10000,经BD备降","alts":["UIII"],"lvl":10000,
+             "raw":"或沿航路飞至TOVMO,下降高度10000ft,经 BD 备降UIII;",
+             "anim":[["EVT",35000],["EVT>TOVMO:0.4",14000],["TOVMO",14000],["BD",10000],["UIII",0]]},
+            {"n":3,"sum":"至TOVMO,沿BD·NEBOK·MIKET备降","alts":["UNKL"],"lvl":10000,
+             "raw":"或沿航路飞至TOVMO,沿航路经BD NEBOK MIKET 备降UNKL。",
+             "anim":[["EVT",35000],["EVT>TOVMO:0.4",14000],["TOVMO",14000],["BD",10000],["NEBOK",10000],["MIKET",10000],["UNKL",0]]}
+          ]
+        },
+        {
+          "seq":5,"from":"GINOM","to":"TR","initAlt":13000,
+          "options":[
+            {"n":1,"sum":"经TR·A308至D70T降10000,备降","alts":["UNAA","UNNT"],"lvl":10000,
+             "raw":"沿航路经TR A308飞至D70T,下降高度10000ft,备降UNAA/UNNT;",
+             "anim":[["EVT",35000],["EVT>TR:0.5",13000],["TR",13000],["D70T",13000],["D70T>UNAA:0.4",10000],["UNAA",0]],
+             "animAlt":{"UNNT":[["EVT",35000],["EVT>TR:0.5",13000],["TR",13000],["D70T",13000],["D70T>UNNT:0.4",10000],["UNNT",0]]}},
+            {"n":2,"sum":"经TR·A308至D70T降10000,经ABK·MIKET备降","alts":["UNKL"],"lvl":10000,
+             "raw":"或沿航路经TR A308飞至D70T,下降高度10000ft,沿航路经ABK MIKET 备降UNKL;",
+             "anim":[["EVT",35000],["EVT>TR:0.5",13000],["TR",13000],["D70T",13000],["ABK",10000],["MIKET",10000],["UNKL",0]]},
+            {"n":3,"sum":"经TR·A308至D70T降10000,经ABK·MIKET·NEBOK·BD备降","alts":["UIII"],"lvl":10000,
+             "raw":"或沿航路经TR A308飞至D70T,下降高度10000ft,沿航路经ABK MIKET NEBOK BD备降UIII。",
+             "anim":[["EVT",35000],["EVT>TR:0.5",13000],["TR",13000],["D70T",13000],["ABK",10000],["MIKET",10000],["NEBOK",10000],["BD",10000],["UIII",0]]}
+          ]
+        },
+        {
+          "seq":6,"from":"TR","to":"DEKAN","via":["TISUP"],"initAlt":13000,
+          "options":[
+            {"n":1,"sum":"沿TR·A308至D70T降10000,备降","alts":["UNAA","UNNT"],"lvl":10000,
+             "raw":"沿航路经TR A308飞至D70T,下降高度10000ft,备降UNAA/UNNT;",
+             "anim":[["EVT",35000],["EVT>TR:0.5",13000],["TR",13000],["D70T",13000],["D70T>UNAA:0.4",10000],["UNAA",0]],
+             "animAlt":{"UNNT":[["EVT",35000],["EVT>TR:0.5",13000],["TR",13000],["D70T",13000],["D70T>UNNT:0.4",10000],["UNNT",0]]}},
+            {"n":2,"sum":"沿TR·A308至D70T降10000,经ABK·MIKET备降","alts":["UNKL"],"lvl":10000,
+             "raw":"沿航路经TR A308飞至D70T,下降高度10000ft,沿航路经ABK MIKET 备降UNKL;",
+             "anim":[["EVT",35000],["EVT>TR:0.5",13000],["TR",13000],["D70T",13000],["ABK",10000],["MIKET",10000],["UNKL",0]]},
+            {"n":3,"sum":"沿TR·A308至D70T降10000,经ABK·MIKET·NEBOK·BD备降","alts":["UIII"],"lvl":10000,
+             "raw":"或沿航路经TR A308飞至D70T,下降高度10000ft,沿航路经ABK MIKET NEBOK BD备降UIII。",
+             "anim":[["EVT",35000],["EVT>TR:0.5",13000],["TR",13000],["D70T",13000],["ABK",10000],["MIKET",10000],["NEBOK",10000],["BD",10000],["UIII",0]]}
+          ]
+        },
+        {
+          "seq":7,"from":"MATAK","to":"ABUSA","initAlt":13000,
+          "options":[
+            {"n":1,"sum":"沿R229至MATAK降10000,备降","alts":["ZMCK"],"lvl":10000,
+             "raw":"沿航路R229飞至MATAK下降高度10000ft,备降ZMCK;",
+             "anim":[["EVT",35000],["EVT>MATAK:0.4",13000],["MATAK",13000],["MATAK>ZMCK:0.4",10000],["ZMCK",0]]},
+            {"n":2,"sum":"经MATAK,沿航路至BD降10000,备降","alts":["UIII"],"lvl":10000,
+             "raw":"或经MATAK点,沿航路飞至BD下降高度10000ft,备降UIII;",
+             "anim":[["EVT",35000],["EVT>MATAK:0.4",13000],["MATAK",13000],["BD",10000],["UIII",0]]},
+            {"n":3,"sum":"经MATAK至BD降10000,经NEBOK·MIKET备降","alts":["UNKL"],"lvl":10000,
+             "raw":"或经MATAK点,沿航路飞至BD下降高度10000ft,沿航路经NEBOK MIKET备降UNKL。",
+             "anim":[["EVT",35000],["EVT>MATAK:0.4",13000],["MATAK",13000],["BD",10000],["NEBOK",10000],["MIKET",10000],["UNKL",0]]}
+          ]
+        },
+        {
+          "seq":8,"from":"KESUM","to":"ABUSA","initAlt":13000,"altNote":"直接飞至NEBOK点,然后下降10000ft",
+          "options":[
+            {"n":1,"sum":"经NEBOK·BD备降","alts":["UIII"],"lvl":10000,
+             "raw":"以Vmo/Mmo下降至13000ft,直接飞至NEBOK点,然后下降高度10000ft:沿航路经BD备降UIII;",
+             "anim":[["EVT",35000],["EVT>NEBOK:0.5",13000],["NEBOK",13000],["BD",10000],["UIII",0]]},
+            {"n":2,"sum":"经NEBOK,沿LETBI·TOVMO备降","alts":["ZMCK"],"lvl":10000,
+             "raw":"或沿航路经LETBI TOVMO备降ZMCK;",
+             "anim":[["EVT",35000],["EVT>NEBOK:0.5",13000],["NEBOK",13000],["LETBI",10000],["TOVMO",10000],["ZMCK",0]]},
+            {"n":3,"sum":"经NEBOK·MIKET备降","alts":["UNAA","UNNT"],"lvl":10000,
+             "raw":"或沿航路经MIKET备降UNAA/UNNT。",
+             "anim":[["EVT",35000],["EVT>NEBOK:0.5",13000],["NEBOK",13000],["MIKET",10000],["UNAA",0]],
+             "animAlt":{"UNNT":[["EVT",35000],["EVT>NEBOK:0.5",13000],["NEBOK",13000],["MIKET",10000],["UNNT",0]]}}
+          ]
+        },
+        {
+          "seq":9,"from":"KESUM","to":"IVRAS","initAlt":13000,
+          "options":[
+            {"n":1,"sum":"沿R372至IVRAS降10000,经MIKET备降","alts":["UNAA","UNNT"],"lvl":10000,
+             "raw":"沿航路R372飞至IVRAS下降高度10000ft,沿航路经 MIKET备降UNAA/UNNT;",
+             "anim":[["EVT",35000],["EVT>IVRAS:0.4",13000],["IVRAS",13000],["IVRAS>MIKET:0.5",10000],["MIKET",10000],["UNAA",0]],
+             "animAlt":{"UNNT":[["EVT",35000],["EVT>IVRAS:0.4",13000],["IVRAS",13000],["IVRAS>MIKET:0.5",10000],["MIKET",10000],["UNNT",0]]}},
+            {"n":2,"sum":"沿R372至IVRAS降10000,经MIKET·NEBOK·BD备降","alts":["UIII"],"lvl":10000,
+             "raw":"或沿航路R372飞至IVRAS下降高度10000ft,沿航路经MIKET NEBOK BD备降UIII;",
+             "anim":[["EVT",35000],["EVT>IVRAS:0.4",13000],["IVRAS",13000],["MIKET",10000],["NEBOK",10000],["BD",10000],["UIII",0]]},
+            {"n":3,"sum":"沿R372至IVRAS降10000,经MIKET备降","alts":["UNKL"],"lvl":10000,
+             "raw":"或沿航路R372飞至IVRAS下降高度10000ft,沿航路经MIKET备降UNKL。",
+             "anim":[["EVT",35000],["EVT>IVRAS:0.4",13000],["IVRAS",13000],["MIKET",10000],["UNKL",0]]}
+          ]
+        },
+        {
+          "seq":10,"from":"D208G","to":"GINOM","via":["KESUM"],"initAlt":13000,
+          "options":[
+            {"n":1,"sum":"经D208G后降10000,沿航路返回备降","alts":["UNAA","UNNT"],"lvl":10000,
+             "raw":"经D208G点后下降高度至10000FT,沿航路返回UNAA/UNNT备降;",
+             "anim":[["EVT",35000],["EVT>D208G:0.5",13000],["D208G",13000],["D208G>UNAA:0.4",10000],["UNAA",0]],
+             "animAlt":{"UNNT":[["EVT",35000],["EVT>D208G:0.5",13000],["D208G",13000],["D208G>UNNT:0.4",10000],["UNNT",0]]}},
+            {"n":2,"sum":"经D208G后降10000,沿航路前往备降","alts":["UNKL"],"lvl":10000,
+             "raw":"或经D208G点后下降高度至10000FT,沿航路前往UNKL备降;",
+             "anim":[["EVT",35000],["EVT>D208G:0.5",13000],["D208G",13000],["D208G>UNKL:0.5",10000],["UNKL",0]]},
+            {"n":3,"sum":"经D208G后降10000,经MIKET·NEBOK·BD前往备降","alts":["UIII"],"lvl":10000,
+             "raw":"或经D208G点后下降高度至10000FT,沿航路经MIKET NEBOK BD前往UIII备降。",
+             "anim":[["EVT",35000],["EVT>D208G:0.5",13000],["D208G",13000],["MIKET",10000],["NEBOK",10000],["BD",10000],["UIII",0]]}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "D527-1",
+      "key": "c4",
+      "tab": "D527-1 POLHO–RO",
+      "title": "POLHO-RO 释压程序",
+      "oxygen": "",
+      "eff": "2026-01-28",
+      "page": "第1页共2页",
+      "linear": true,
+      "view": [1560,780],
+      "notes": [
+        "距离标注中的『地图作业』为原图标注,含义不明(制图注记),原样保留。"
+      ],
+      "route": ["POLHO","NONAR","SERNA","BD","BUMER","LONKA","RO"],
+      "fixes": {
+        "TISBU": [308,216], "RO": [333,290,"b"], "ROGMA": [207,340,"b"], "LONKA": [490,339],
+        "SUKOR": [698,335], "NEBOK": [841,356], "MIKET": [223,399,"b"], "BUMER": [600,399,"b"],
+        "BD": [788,472,"l"], "SERNA": [936,498,"r"], "BURKU": [883,571,"l"], "NONAR": [1055,582,"r"],
+        "UDA": [761,627,"l"], "NIXAL": [901,678,"b"], "POLHO": [1222,690,"b"]
+      },
+      "airports": {
+        "UNKL": {"xy":[177,296], "name":"克拉斯诺亚尔斯克"},
+        "UNAA": {"xy":[163,478], "name":"阿巴坎"},
+        "UNNT": {"xy":[92,579],  "name":"新西伯利亚"},
+        "UIII": {"xy":[1011,430],"name":"伊尔库茨克"},
+        "ZMCK": {"xy":[740,665], "name":"乌兰巴托"},
+        "ZBHH": {"xy":[996,700], "name":"呼和浩特"},
+        "ZBAA": {"xy":[1350,695],"name":"北京首都"}
+      },
+      "legs": [
+        {"from":"RO","to":"LONKA","awy":"R497","dist":"69 (3323)","seg":4},
+        {"from":"LONKA","to":"BUMER","awy":"R497","dist":"51 (3384)","seg":4},
+        {"from":"BUMER","to":"BD","awy":"R497","dist":"219 (3102) 地图作业","seg":3},
+        {"from":"BD","to":"SERNA","awy":"R497","dist":"","seg":2,"color":"dark"},
+        {"from":"SERNA","to":"NONAR","awy":"Y520","dist":"193 (3116) 地图作业","seg":1},
+        {"from":"NONAR","to":"POLHO","awy":"","dist":"","seg":0,"color":"dark"},
+        {"from":"SERNA","to":"BURKU","awy":"","dist":"","seg":0,"color":"dark"},
+        {"from":"BURKU","to":"UDA","awy":"","dist":"","seg":0,"color":"dark"},
+        {"from":"UDA","to":"NIXAL","awy":"","dist":"","seg":0,"color":"dark","unsure":true}
+      ],
+      "diversions": [
+        {"from":"TISBU","to":"UNKL","label":"","style":"blue"},
+        {"from":"RO","to":"TISBU","label":"","style":"blue"},
+        {"from":"TISBU","to":"SUKOR","label":"","style":"blue"},
+        {"from":"UNKL","to":"ROGMA","label":"","style":"blue"},
+        {"from":"ROGMA","to":"MIKET","label":"","style":"blue"},
+        {"from":"MIKET","to":"UNAA","label":"","style":"blue"},
+        {"from":"UNAA","to":"UNNT","label":"","style":"blue"},
+        {"from":"MIKET","to":"LONKA","label":"","style":"blue","unsure":true},
+        {"from":"SUKOR","to":"BD","label":"","style":"blue"},
+        {"from":"NEBOK","to":"BD","label":"","style":"blue","unsure":true},
+        {"from":"BD","to":"UIII","label":"","style":"blue"},
+        {"from":"UDA","to":"NONAR","label":"","style":"blue","unsure":true},
+        {"from":"NIXAL","to":"ZBHH","label":"","style":"blue"},
+        {"from":"POLHO","to":"ZBAA","label":"","style":"blue"}
+      ],
+      "msa": [],
+      "segments": [
+        {
+          "seq":1,"from":"NONAR","to":"SERNA","initAlt":13000,
+          "options":[
+            {"n":1,"sum":"向北至SERNA或向南至NONAR,降10000,沿黑/蓝航路备降","alts":["ZMCK"],"lvl":10000,
+             "raw":"沿Y520向北飞至SERNA或向南飞至NONAR后,下降至10000ft,沿黑色、蓝色航路备降ZMCK;",
+             "anim":[["EVT",35000],["EVT>SERNA:0.5",13000],["SERNA",13000],["SERNA>BURKU:0.5",10000],["BURKU",10000],["UDA",10000],["ZMCK",0]]},
+            {"n":2,"sum":"沿Y520向南至NONAR,降10000,沿黑/蓝航路备降","alts":["ZBAA"],"lvl":10000,
+             "raw":"或沿Y520向南飞至NONAR后,下降至10000ft,沿黑色、蓝色航路备降ZBAA。",
+             "anim":[["EVT",35000],["EVT>NONAR:0.5",13000],["NONAR",13000],["NONAR>POLHO:0.5",10000],["POLHO",10000],["ZBAA",0]]}
+          ]
+        },
+        {
+          "seq":2,"from":"SERNA","to":"BD","initAlt":10000,"altNote":"本段直接下降至10000ft",
+          "options":[
+            {"n":1,"sum":"沿R497至SERNA,沿黑色航路备降","alts":["ZMCK"],"lvl":10000,
+             "raw":"沿R497飞至SERNA,沿黑色航路备降ZMCK机场;",
+             "anim":[["EVT",35000],["EVT>SERNA:0.5",10000],["SERNA",10000],["BURKU",10000],["UDA",10000],["ZMCK",0]]},
+            {"n":2,"sum":"沿R497至BD台,沿蓝色航路备降","alts":["UIII"],"lvl":10000,
+             "raw":"或沿R497飞至BD台,沿蓝色航路备降UIII;",
+             "anim":[["EVT",35000],["EVT>BD:0.5",10000],["BD",10000],["UIII",0]]},
+            {"n":3,"sum":"沿R497向西至BD台,沿蓝色航路备降","alts":["UNAA","UNNT"],"lvl":10000,"fuel":true,
+             "raw":"或沿R497向西飞至BD台,沿蓝色航路备降UNAA/UNNT(需检查油量);",
+             "anim":[["EVT",35000],["EVT>BD:0.5",10000],["BD",10000],["SUKOR",10000],["MIKET",10000],["UNAA",0]],
+             "animAlt":{"UNNT":[["EVT",35000],["EVT>BD:0.5",10000],["BD",10000],["SUKOR",10000],["MIKET",10000],["UNAA",6000],["UNNT",0]]}},
+            {"n":4,"sum":"沿R497至BD台,沿蓝色航路备降","alts":["UNKL"],"lvl":10000,"fuel":true,
+             "raw":"或沿R497飞至BD台,沿蓝色航路备降UNKL(需检查油量)。",
+             "anim":[["EVT",35000],["EVT>BD:0.5",10000],["BD",10000],["SUKOR",10000],["TISBU",10000],["UNKL",0]]}
+          ]
+        },
+        {
+          "seq":3,"from":"BD","to":"BUMER","initAlt":13000,"altNote":"沿R497飞至BD台后下降至10000ft",
+          "options":[
+            {"n":1,"sum":"沿蓝色航路备降","alts":["UIII"],"lvl":10000,
+             "raw":"以VMO/MMO下降至13000ft,沿R497飞至BD台,下降至10000ft:沿蓝色航路备降UIII;",
+             "anim":[["EVT",35000],["EVT>BD:0.4",13000],["BD",13000],["BD>UIII:0.3",10000],["UIII",0]]},
+            {"n":2,"sum":"沿蓝色航路备降","alts":["UNAA","UNNT"],"lvl":10000,"fuel":true,
+             "raw":"或沿蓝色航路备降UNAA/UNNT(需检查油量);",
+             "anim":[["EVT",35000],["EVT>BD:0.4",13000],["BD",13000],["SUKOR",10000],["MIKET",10000],["UNAA",0]],
+             "animAlt":{"UNNT":[["EVT",35000],["EVT>BD:0.4",13000],["BD",13000],["SUKOR",10000],["MIKET",10000],["UNAA",6000],["UNNT",0]]}},
+            {"n":3,"sum":"沿蓝色航路备降","alts":["UNKL"],"lvl":10000,"fuel":true,
+             "raw":"或沿蓝色航路备降UNKL(需检查油量)。",
+             "anim":[["EVT",35000],["EVT>BD:0.4",13000],["BD",13000],["SUKOR",10000],["TISBU",10000],["UNKL",0]]}
+          ]
+        },
+        {
+          "seq":4,"from":"BUMER","to":"RO","via":["LONKA"],"initAlt":13000,
+          "options":[
+            {"n":1,"sum":"沿R497至LONKA,降10000,沿蓝色航路备降","alts":["UIII"],"lvl":10000,
+             "raw":"沿R497飞至LONKA,下降至10000ft,沿蓝色航路备降UIII;",
+             "anim":[["EVT",35000],["EVT>LONKA:0.5",13000],["LONKA",13000],["LONKA>SUKOR:0.5",10000],["SUKOR",10000],["BD",10000],["UIII",0]]},
+            {"n":2,"sum":"沿R497至LONKA,降10000,沿蓝色航路备降","alts":["UNAA","UNNT"],"lvl":10000,
+             "raw":"或沿R497飞至LONKA,下降至10000ft,沿蓝色航路备降UNAA/UNNT;",
+             "anim":[["EVT",35000],["EVT>LONKA:0.5",13000],["LONKA",13000],["MIKET",10000],["UNAA",0]],
+             "animAlt":{"UNNT":[["EVT",35000],["EVT>LONKA:0.5",13000],["LONKA",13000],["MIKET",10000],["UNAA",6000],["UNNT",0]]}},
+            {"n":3,"sum":"沿R497至RO,降10000,沿蓝色航路备降","alts":["UNKL"],"lvl":10000,
+             "raw":"或沿R497飞至RO,下降至10000ft,沿蓝色航路备降UNKL。",
+             "anim":[["EVT",35000],["EVT>RO:0.5",13000],["RO",13000],["TISBU",10000],["UNKL",0]]}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "D574-1",
+      "key": "c1",
+      "tab": "D574-1 OKTAT–TBN",
+      "title": "OKTAT-TBN航段释压应急供氧程序简令",
+      "oxygen": "22分钟及以上氧气系统",
+      "eff": "2026-04-21",
+      "page": "第1页共2页",
+      "notes": [],
+      "route": ["OKTAT","BEKIR","ADEKI","BADIR","LAGAS","NOLGA","GONPU","TBN"],
+      "fixes": {
+        "OKTAT": [1225,125,"l"], "BEKIR": [1000,290], "ADEKI": [855,237], "BADIR": [710,237,"b"],
+        "LAGAS": [645,233], "NOLGA": [545,235], "GONPU": [425,235], "TBN": [215,235]
+      },
+      "airports": {
+        "UBBB": {"xy":[1478,462], "name":"巴库"},
+        "UBBQ": {"xy":[962,392],  "name":"占贾"},
+        "UBBG": {"xy":[762,417],  "name":"盖贝莱"},
+        "UGTB": {"xy":[700,92],   "name":"第比利斯"},
+        "LTCT": {"xy":[622,452],  "name":""},
+        "LTCF": {"xy":[508,362],  "name":"卡尔斯"},
+        "LTCE": {"xy":[348,418],  "name":"埃尔祖鲁姆"},
+        "LTCD": {"xy":[162,428],  "name":""},
+        "LTCG": {"xy":[172,210],  "name":"特拉布宗"},
+        "LTCB": {"xy":[105,205],  "name":""},
+        "LTFH": {"xy":[45,185],   "name":"萨姆松"}
+      },
+      "legs": [
+        {"from":"OKTAT","to":"BEKIR","awy":"N161","dist":"37 (5045)","seg":1},
+        {"from":"BEKIR","to":"ADEKI","awy":"L850","dist":"53 (5045)","seg":2},
+        {"from":"ADEKI","to":"BADIR","awy":"N644","dist":"63 (3841)","seg":2},
+        {"from":"BADIR","to":"LAGAS","awy":"N644","dist":"51 (3841)","seg":3},
+        {"from":"LAGAS","to":"NOLGA","awy":"N61","dist":"57 (4329)","seg":4},
+        {"from":"NOLGA","to":"GONPU","awy":"UN61","dist":"46 (4329)","seg":5},
+        {"from":"GONPU","to":"TBN","awy":"UN61","dist":"99 (4664)","seg":6}
+      ],
+      "diversions": [
+        {"from":"OKTAT","to":"UBBB","label":"89 (4968)"},
+        {"from":"OKTAT","to":"UBBQ","label":""},
+        {"from":"BEKIR","to":"UBBQ","label":"17 (5045)"},
+        {"from":"BEKIR","to":"UBBG","label":"53 (5045)"},
+        {"from":"ADEKI","to":"UGTB","label":"","unsure":true},
+        {"from":"BADIR","to":"UGTB","label":"33 (3841)","style":"blue"},
+        {"from":"BADIR","to":"UBBG","label":"98 (4329)"},
+        {"from":"LAGAS","to":"UBBG","label":"108 (3126)"},
+        {"from":"LAGAS","to":"LTCT","label":"80 (4329)"},
+        {"from":"NOLGA","to":"LTCF","label":"85 (4329)"},
+        {"from":"GONPU","to":"LTCF","label":"69 (4329)"},
+        {"from":"GONPU","to":"LTCE","label":"89 (5091)"},
+        {"from":"TBN","to":"LTCE","label":"148 (5091)"},
+        {"from":"TBN","to":"LTCD","label":"79 (4846)"},
+        {"from":"LTCD","to":"LTCE","label":"78 (4603)"},
+        {"from":"LTCF","to":"LTCT","label":"49 (4329)"},
+        {"from":"UBBQ","to":"UBBB","label":"108 (4268)","style":"blue"},
+        {"from":"UBBG","to":"UBBQ","label":"","style":"blue"},
+        {"from":"TBN","to":"LTCG","label":"","style":"blue"},
+        {"from":"LTCG","to":"LTCB","label":"","style":"blue"},
+        {"from":"LTCB","to":"LTFH","label":"","style":"blue"}
+      ],
+      "msa": [
+        {"xy":[300,300],"v":"5091m"},
+        {"xy":[565,300],"v":"4329m"},
+        {"xy":[865,330],"v":"5045m"},
+        {"xy":[1195,365],"v":"5045m"}
+      ],
+      "segments": [
+        {
+          "seq":1,"from":"OKTAT","to":"BEKIR","initAlt":25000,
+          "options":[
+            {"n":1,"sum":"立即偏航,直飞备降","alts":["UBBB","UBBQ"],"lvl":25000,
+             "raw":"立即偏航直飞UBBB、UBBQ机场备降。",
+             "anim":[["EVT",35000],["EVT>UBBB:0.30",25000],["UBBB",0]],
+             "animAlt":{"UBBQ":[["EVT",35000],["EVT>UBBQ:0.35",25000],["UBBQ",0]]}}
+          ]
+        },
+        {
+          "seq":2,"from":"BEKIR","to":"BADIR","via":["ADEKI"],"initAlt":25000,
+          "options":[
+            {"n":1,"sum":"立即偏航,直飞备降","alts":["UBBG","UBBQ"],"lvl":25000,
+             "raw":"立即偏航直飞UBBG、UBBQ机场备降。",
+             "anim":[["EVT",35000],["EVT>UBBQ:0.35",25000],["UBBQ",0]],
+             "animAlt":{"UBBG":[["EVT",35000],["EVT>UBBG:0.35",25000],["UBBG",0]]}},
+            {"n":2,"sum":"沿航路至ADEKI以西,降13000,沿航路备降","alts":["UGTB"],"lvl":13000,
+             "raw":"沿航路飞至ADEKI以西下降至13000FT,沿航路备降UGTB机场。",
+             "anim":[["EVT",35000],["EVT>ADEKI:0.5",25000],["ADEKI",25000],["ADEKI>BADIR:0.6",13000],["BADIR",13000],["UGTB",0]]}
+          ]
+        },
+        {
+          "seq":3,"from":"BADIR","to":"LAGAS","initAlt":25000,
+          "options":[
+            {"n":1,"sum":"立即偏航,直飞备降","alts":["UBBG"],"lvl":25000,
+             "raw":"立即偏航直飞UBBG机场备降。",
+             "anim":[["EVT",35000],["EVT>UBBG:0.35",25000],["UBBG",0]]},
+            {"n":2,"sum":"立即偏航直飞UBBG,沿航路备降","alts":["UBBQ"],"lvl":25000,
+             "raw":"立即偏航直飞UBBG、沿航路备降UBBQ机场。",
+             "anim":[["EVT",35000],["EVT>UBBG:0.4",25000],["UBBG>UBBQ:0.5",25000],["UBBQ",0]]},
+            {"n":3,"sum":"立即向北偏航,备降","alts":["UGTB"],"lvl":25000,
+             "raw":"立即向北偏航,备降UGTB机场。",
+             "anim":[["EVT",35000],["EVT>UGTB:0.35",25000],["UGTB",0]]}
+          ]
+        },
+        {
+          "seq":4,"from":"LAGAS","to":"NOLGA","initAlt":25000,
+          "options":[
+            {"n":1,"sum":"立即偏航,直飞备降","alts":["LTCF","LTCT"],"lvl":25000,
+             "raw":"立即偏航直飞LTCF、LTCT机场备降;",
+             "anim":[["EVT",35000],["EVT>LTCF:0.35",25000],["LTCF",0]],
+             "animAlt":{"LTCT":[["EVT",35000],["EVT>LTCT:0.35",25000],["LTCT",0]]}},
+            {"n":2,"sum":"沿航路回LAGAS后降13000,直飞备降","alts":["UBBG"],"lvl":13000,
+             "raw":"沿航路飞至LAGAS后下降高度13000FT,直飞UBBG机场备降;",
+             "anim":[["EVT",35000],["EVT>LAGAS:0.5",25000],["LAGAS",25000],["LAGAS>UBBG:0.45",13000],["UBBG",0]]},
+            {"n":3,"sum":"沿航路回LAGAS后降13000,备降","alts":["UGTB"],"lvl":13000,
+             "raw":"沿航路飞至LAGAS后下降高度13000FT,备降UGTB机场。",
+             "anim":[["EVT",35000],["EVT>LAGAS:0.5",25000],["LAGAS",25000],["LAGAS>UGTB:0.45",13000],["UGTB",0]]}
+          ]
+        },
+        {
+          "seq":5,"from":"NOLGA","to":"GONPU","initAlt":25000,
+          "options":[
+            {"n":1,"sum":"立即偏航,直飞备降","alts":["LTCF","LTCT"],"lvl":25000,
+             "raw":"立即偏航直飞LTCF、LTCT机场备降;",
+             "anim":[["EVT",35000],["EVT>LTCF:0.35",25000],["LTCF",0]],
+             "animAlt":{"LTCT":[["EVT",35000],["EVT>LTCT:0.35",25000],["LTCT",0]]}},
+            {"n":2,"sum":"沿航路至GONPU后直飞备降","alts":["LTCE"],"lvl":25000,
+             "raw":"沿航路飞至GONPU后直飞LTCE机场备降;",
+             "anim":[["EVT",35000],["EVT>GONPU:0.5",25000],["GONPU",25000],["GONPU>LTCE:0.5",12000],["LTCE",0]]},
+            {"n":3,"sum":"沿航路经GONPU至TBN,降10000,备降","alts":["LTCG","LTCB","LTFH"],"lvl":10000,
+             "raw":"沿航路飞至GONPU后继续延航路飞至TBN,下降高度10000FT,备降LTCG、LTCB、LTFH机场;",
+             "anim":[["EVT",35000],["EVT>GONPU:0.5",25000],["GONPU",25000],["TBN",25000],["TBN>LTCG:0.45",10000],["LTCG",0]],
+             "animAlt":{"LTCB":[["EVT",35000],["EVT>GONPU:0.5",25000],["GONPU",25000],["TBN",25000],["TBN>LTCB:0.45",10000],["LTCB",0]],
+                        "LTFH":[["EVT",35000],["EVT>GONPU:0.5",25000],["GONPU",25000],["TBN",25000],["TBN>LTFH:0.45",10000],["LTFH",0]]}},
+            {"n":4,"sum":"沿航路回LAGAS后降13000,备降","alts":["UGTB"],"lvl":13000,
+             "raw":"沿航路飞至LAGAS后下降高度13000FT,备降UGTB机场。",
+             "anim":[["EVT",35000],["EVT>NOLGA:0.5",25000],["NOLGA",25000],["LAGAS",25000],["LAGAS>UGTB:0.45",13000],["UGTB",0]]}
+          ]
+        },
+        {
+          "seq":6,"from":"GONPU","to":"TBN","initAlt":25000,
+          "options":[
+            {"n":1,"sum":"立即偏航,直飞备降","alts":["LTCD","LTCE"],"lvl":25000,
+             "raw":"立即偏航直飞LTCD、LTCE机场备降;",
+             "anim":[["EVT",35000],["EVT>LTCE:0.35",25000],["LTCE",0]],
+             "animAlt":{"LTCD":[["EVT",35000],["EVT>LTCD:0.35",25000],["LTCD",0]]}},
+            {"n":2,"sum":"沿航路至TBN后降10000,备降","alts":["LTCG","LTCB","LTFH"],"lvl":10000,
+             "raw":"沿航路飞至TBN后下降高度10000FT,备降LTCG、LTCB、LTFH机场。",
+             "anim":[["EVT",35000],["EVT>TBN:0.5",25000],["TBN",25000],["TBN>LTCG:0.45",10000],["LTCG",0]],
+             "animAlt":{"LTCB":[["EVT",35000],["EVT>TBN:0.5",25000],["TBN",25000],["TBN>LTCB:0.45",10000],["LTCB",0]],
+                        "LTFH":[["EVT",35000],["EVT>TBN:0.5",25000],["TBN",25000],["TBN>LTFH:0.45",10000],["LTFH",0]]}}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "D574-2",
+      "key": "c2",
+      "tab": "D574-2 ROLIN–OKTAT/KONUL",
+      "title": "ROLIN-OKTAT/KONUL航段释压应急供氧程序简令",
+      "oxygen": "22分钟及以上氧气系统",
+      "eff": "2026-04-21",
+      "page": "第2页共2页",
+      "notes": [
+        "注:D130 —— N644航路上,ODILI点以西13海里。",
+        "一发失效后,减速至最大升阻比速度,按照机型实际单发能力保持高度,备降机场与释压程序一致。"
+      ],
+      "route": ["ROLIN","D130","ODILI","LAGAS","SUBUT","LEYLA","OKTAT","KONUL"],
+      "fixes": {
+        "ROLIN": [245,145,"l"], "D130": [355,128], "ODILI": [438,145], "LAGAS": [665,215],
+        "SUBUT": [960,268,"b"], "LEYLA": [1130,198], "OKTAT": [1320,132], "KONUL": [1420,205,"r"]
+      },
+      "airports": {
+        "LTFH": {"xy":[55,180],  "name":"萨姆松"},
+        "LTCB": {"xy":[130,202], "name":""},
+        "LTCG": {"xy":[205,212], "name":"特拉布宗"},
+        "LTCE": {"xy":[355,420], "name":"埃尔祖鲁姆"},
+        "LTCF": {"xy":[510,388], "name":"卡尔斯"},
+        "LTCT": {"xy":[640,470], "name":""},
+        "UGTB": {"xy":[740,120], "name":"第比利斯"},
+        "UBBG": {"xy":[810,410], "name":"盖贝莱"},
+        "UBBQ": {"xy":[1105,395],"name":"占贾"},
+        "UBBB": {"xy":[1490,468],"name":"巴库"}
+      },
+      "legs": [
+        {"from":"ROLIN","to":"D130","awy":"N644","dist":"51 (2348)","seg":0,"color":"dark"},
+        {"from":"D130","to":"ODILI","awy":"N644","dist":"13 (3338)","seg":1},
+        {"from":"ODILI","to":"LAGAS","awy":"N644","dist":"95 (4329)","seg":2},
+        {"from":"LAGAS","to":"SUBUT","awy":"M747","dist":"122 (3841)","seg":3},
+        {"from":"SUBUT","to":"LEYLA","awy":"T916","dist":"54 (5045)","seg":4},
+        {"from":"LEYLA","to":"OKTAT","awy":"N161","dist":"32 (5045)","seg":5},
+        {"from":"LEYLA","to":"KONUL","awy":"T916","dist":"44 (5045)","seg":6},
+        {"from":"OKTAT","to":"KONUL","awy":"","dist":"16 (5045)","seg":0,"unsure":true}
+      ],
+      "diversions": [
+        {"from":"ODILI","to":"LTCF","label":"85 (4329)"},
+        {"from":"LAGAS","to":"LTCF","label":"80 (4329)"},
+        {"from":"LAGAS","to":"UBBG","label":"108 (3126)"},
+        {"from":"SUBUT","to":"UBBG","label":"98 (4329)","unsure":true},
+        {"from":"LAGAS","to":"UGTB","label":"33 (3841)"},
+        {"from":"LTCF","to":"LTCE","label":"96 (3755)"},
+        {"from":"LTCF","to":"LTCT","label":"49 (4329)"},
+        {"from":"LTCT","to":"UBBG","label":"121 (4181)"},
+        {"from":"LEYLA","to":"UBBQ","label":"21 (5045)"},
+        {"from":"LEYLA","to":"UBBB","label":"63 (5045)","unsure":true},
+        {"from":"KONUL","to":"UBBQ","label":"53 (5045)","unsure":true},
+        {"from":"KONUL","to":"UBBB","label":"75 (5045)"},
+        {"from":"OKTAT","to":"UBBQ","label":"102 (5045)","unsure":true},
+        {"from":"UBBQ","to":"UBBB","label":"108 (4268)"},
+        {"from":"UBBG","to":"UBBQ","label":"","style":"blue"},
+        {"from":"LTCG","to":"ROLIN","label":"","style":"blue","unsure":true},
+        {"from":"LTCG","to":"LTCB","label":"","style":"blue"},
+        {"from":"LTCB","to":"LTFH","label":"","style":"blue"}
+      ],
+      "msa": [
+        {"xy":[585,320],"v":"4329m"},
+        {"xy":[935,360],"v":"5045m"},
+        {"xy":[1300,330],"v":"5045m"}
+      ],
+      "segments": [
+        {
+          "seq":1,"from":"D130","to":"ODILI","initAlt":25000,
+          "options":[
+            {"n":1,"sum":"沿航路至ODILI,偏航直飞备降","alts":["LTCF","LTCT"],"lvl":25000,
+             "raw":"沿航路飞至ODILI,立即偏航直飞LTCF、LTCT机场备降;",
+             "anim":[["EVT",35000],["ODILI",25000],["ODILI>LTCF:0.3",25000],["LTCF",0]],
+             "animAlt":{"LTCT":[["EVT",35000],["ODILI",25000],["ODILI>LTCT:0.3",25000],["LTCT",0]]}},
+            {"n":2,"sum":"至ODILI→直飞LTCF,过LTCF降13000,直飞备降","alts":["LTCE"],"lvl":13000,
+             "raw":"沿航路飞至ODILI,立即偏航直飞LTCF后下降高度13000FT,直飞LTCE机场备降;",
+             "anim":[["EVT",35000],["ODILI",25000],["LTCF",25000],["LTCF>LTCE:0.5",13000],["LTCE",0]]},
+            {"n":3,"sum":"至ODILI→沿航路至LAGAS,降13000,备降","alts":["UGTB"],"lvl":13000,
+             "raw":"沿航路飞至ODILI,继续沿航路飞至LAGAS后下降高度13000FT,备降UGTB机场。",
+             "anim":[["EVT",35000],["ODILI",25000],["LAGAS",25000],["LAGAS>UGTB:0.45",13000],["UGTB",0]]},
+            {"n":4,"sum":"沿航路至D130,降10000,沿航路备降","alts":["LTCG","LTCB","LTFH"],"lvl":10000,
+             "raw":"沿航路飞至D130下降高度10000FT,沿航路备降LTCG、LTCB、LTFH机场。",
+             "anim":[["EVT",35000],["D130",25000],["D130>ROLIN:0.5",10000],["ROLIN",10000],["LTCG",0]],
+             "animAlt":{"LTCB":[["EVT",35000],["D130",25000],["D130>ROLIN:0.5",10000],["ROLIN",10000],["LTCG",5000],["LTCB",0]],
+                        "LTFH":[["EVT",35000],["D130",25000],["D130>ROLIN:0.5",10000],["ROLIN",10000],["LTCG",6000],["LTCB",4000],["LTFH",0]]}}
+          ]
+        },
+        {
+          "seq":2,"from":"ODILI","to":"LAGAS","initAlt":25000,
+          "options":[
+            {"n":1,"sum":"直飞LTCF;或过LTCF后降13000,直飞LTCE","alts":["LTCF","LTCE"],"lvl":25000,
+             "raw":"立即偏航直飞LTCF机场备降,或飞至LTCF后下降高度13000FT,直飞LTCE机场备降;",
+             "anim":[["EVT",35000],["EVT>LTCF:0.35",25000],["LTCF",0]],
+             "animAlt":{"LTCE":[["EVT",35000],["EVT>LTCF:0.35",25000],["LTCF",25000],["LTCF>LTCE:0.5",13000],["LTCE",0]]}},
+            {"n":2,"sum":"直飞LTCT;或过LTCT后降<span style=\"color:var(--red)\">14000(红字)</span>,直飞UBBG","alts":["LTCT","UBBG"],"lvl":25000,
+             "raw":"立即偏航直飞LTCT机场备降,或飞至LTCT后下降高度<span style=\"color:var(--red);font-weight:800\">14000FT</span>,直飞UBBG机场备降。",
+             "anim":[["EVT",35000],["EVT>LTCT:0.35",25000],["LTCT",0]],
+             "animAlt":{"UBBG":[["EVT",35000],["EVT>LTCT:0.35",25000],["LTCT",25000],["LTCT>UBBG:0.5",14000],["UBBG",0]]}},
+            {"n":3,"sum":"沿航路至LAGAS后降13000,备降","alts":["UGTB"],"lvl":13000,
+             "raw":"沿航路飞至LAGAS后下降高度13000FT,备降UGTB机场;",
+             "anim":[["EVT",35000],["EVT>LAGAS:0.5",25000],["LAGAS",25000],["LAGAS>UGTB:0.45",13000],["UGTB",0]]},
+            {"n":4,"sum":"回ODILI→沿航路至D130,降10000,沿航路备降","alts":["LTCG","LTCB","LTFH"],"lvl":10000,
+             "raw":"沿航路飞至ODILI,继续沿航路飞至D130下降高度10000FT,沿航路备降LTCG、LTCB、LTFH机场。",
+             "anim":[["EVT",35000],["ODILI",25000],["D130",25000],["D130>ROLIN:0.5",10000],["ROLIN",10000],["LTCG",0]],
+             "animAlt":{"LTCB":[["EVT",35000],["ODILI",25000],["D130",25000],["D130>ROLIN:0.5",10000],["ROLIN",10000],["LTCG",5000],["LTCB",0]],
+                        "LTFH":[["EVT",35000],["ODILI",25000],["D130",25000],["D130>ROLIN:0.5",10000],["ROLIN",10000],["LTCG",6000],["LTCB",4000],["LTFH",0]]}}
+          ]
+        },
+        {
+          "seq":3,"from":"LAGAS","to":"SUBUT","initAlt":25000,
+          "options":[
+            {"n":1,"sum":"立即偏航,直飞备降","alts":["UBBG"],"lvl":25000,
+             "raw":"立即偏航直飞UBBG机场备降。",
+             "anim":[["EVT",35000],["EVT>UBBG:0.35",25000],["UBBG",0]]},
+            {"n":2,"sum":"立即偏航直飞UBBG,沿航路备降","alts":["UBBQ"],"lvl":25000,
+             "raw":"立即偏航直飞UBBG,沿航路备降UBBQ机场。",
+             "anim":[["EVT",35000],["EVT>UBBG:0.4",25000],["UBBG",25000],["UBBQ",0]]},
+            {"n":3,"sum":"降至13000,沿M747经LAGAS备降","alts":["UGTB"],"lvl":13000,
+             "raw":"下降至13000FT,沿M747、LAGAS备降UGTB。",
+             "anim":[["EVT",35000],["EVT>LAGAS:0.4",13000],["LAGAS",13000],["LAGAS>UGTB:0.5",13000],["UGTB",0]]}
+          ]
+        },
+        {
+          "seq":4,"from":"SUBUT","to":"LEYLA","initAlt":25000,
+          "options":[
+            {"n":1,"sum":"立即偏航,直飞备降","alts":["UBBG","UBBQ"],"lvl":25000,
+             "raw":"立即偏航直飞UBBG、UBBQ机场备降。",
+             "anim":[["EVT",35000],["EVT>UBBG:0.35",25000],["UBBG",0]],
+             "animAlt":{"UBBQ":[["EVT",35000],["EVT>UBBQ:0.35",25000],["UBBQ",0]]}}
+          ]
+        },
+        {
+          "seq":5,"from":"LEYLA","to":"OKTAT","initAlt":25000,
+          "options":[
+            {"n":1,"sum":"立即偏航,直飞备降","alts":["UBBB","UBBQ"],"lvl":25000,
+             "raw":"立即偏航直飞UBBB、UBBQ机场备降。",
+             "anim":[["EVT",35000],["EVT>UBBQ:0.35",25000],["UBBQ",0]],
+             "animAlt":{"UBBB":[["EVT",35000],["EVT>UBBB:0.35",25000],["UBBB",0]]}}
+          ]
+        },
+        {
+          "seq":6,"from":"LEYLA","to":"KONUL","initAlt":25000,
+          "options":[
+            {"n":1,"sum":"立即偏航,直飞备降","alts":["UBBB","UBBQ"],"lvl":25000,
+             "raw":"立即偏航直飞UBBB、UBBQ机场备降。",
+             "anim":[["EVT",35000],["EVT>UBBB:0.35",25000],["UBBB",0]],
+             "animAlt":{"UBBQ":[["EVT",35000],["EVT>UBBQ:0.35",25000],["UBBQ",0]]}}
+          ]
+        }
+      ]
+    }
+  ],
+  "checklist": [
+    {"item":"D527-1 程序文字(4航段全部方案)","val":"按高清截图录入,含②段直接降10000、③段两级下降、4处'需检查油量'","conf":"高(待用户复核)"},
+    {"item":"D527-1 适用氧气系统","val":"截图未含氧气系统标注,请告知(12分钟/22分钟?)","conf":"低 ⚠ 请补充"},
+    {"item":"D527-1 蓝色航路走向","val":"BD→UNAA/UNNT/UNKL 的演示路径(经SUKOR/MIKET/TISBU)为推定;『地图作业』标注含义待确认","conf":"低 ⚠ 请核对"},
+    {"item":"D527-1 距离","val":"69(3323)/51(3384)/219(3102)/193(3116)","conf":"高(待用户复核)"},
+    {"item":"D501 程序文字(10航段全部方案)","val":"按高清截图录入,含④段红字14000ft、⑧段'直飞NEBOK'、D70T/D208G两条注记","conf":"高(待用户复核)"},
+    {"item":"D501 航段距离","val":"171(3540)/216(3353)/35(3171)/197(3750)/70(3200)/100(3353)/95(3353)/163(3476)/241(4020)/208(3628)/147(3415)/238(3871)/80(3871)","conf":"高(待用户复核)"},
+    {"item":"D501 图面连线","val":"已按用户提供高清图全部重画:R104=GINOM–KESUM–D208G已确认;蓝虚线ABK–MIKET、MATAK–LETBI–TOVMO已确认","conf":"✅ 按高清图重画(2026-09-15)"},
+    {"item":"D501 剩余待核连线","val":"UNAA–UNNT、MIKET–NEBOK 两条蓝虚线为推定","conf":"低 ⚠ 请核对"},
+    {"item":"D501 机场中文名","val":"UNKL克拉斯诺亚尔斯克/UNAA阿巴坎/UNNT新西伯利亚/UIII伊尔库茨克/ZMCK乌兰巴托(参考,非原图内容)","conf":"中"},
+    {"item":"D574-1 程序文字(6航段全部方案)","val":"含②方案1(UBBG、UBBQ)与③方案2表述","conf":"✅ 已复核(用户 2026-09-15)"},
+    {"item":"D574-1 航段距离","val":"37/53/63/51/57/46/99,按用户提供值修正(63、51 归位)","conf":"✅ 已复核(用户提供)"},
+    {"item":"D574-1 备降连线及数值","val":"用户过目未见问题;ADEKI→UGTB 原误标63已移除,该线现无数值","conf":"低 ⚠ 仅此一条请再看"},
+    {"item":"括号内数值含义","val":"推测为该线段最低安全高度(米),与图上MSA框吻合;用户亦不确定","conf":"中(不影响使用)"},
+    {"item":"D574-2 程序文字(6航段全部方案)","val":"按高清截图录入,含②方案2红字14000FT、两条注记","conf":"高(待用户复核)"},
+    {"item":"D574-2 航段距离","val":"51(2348)/13(3338)/95(4329)/122(3841)/54(5045)/32(5045)/44(5045)","conf":"高(待用户复核)"},
+    {"item":"D574-2 待定连线","val":"98(4329)归属(SUBUT→UBBG?)、63(5045)/53(5045)/102(5045)端点、OKTAT–KONUL红线16(5045)、LTCG–ROLIN蓝虚线","conf":"低 ⚠ 请核对"},
+    {"item":"机场中文名","val":"参考信息,非原图内容(LTCT/LTCD/LTCB暂缺)","conf":"中"},
+    {"item":"RVSM脱离程序","val":"公开资料占位,用户确认暂缓,待公司手册替换","conf":"低 ⚠(已知悉)"},
+    {"item":"演示动画轨迹/剖面","val":"根据程序文字推定,仅示意","conf":"参考"}
+  ]
+}
+</script>
+
+<!-- archify 决策图占位模板(构建脚本注入) -->
+<template id="dg-c1-s1"></template>
+<template id="dg-c1-s2"></template>
+<template id="dg-c1-s3"></template>
+<template id="dg-c1-s4"></template>
+<template id="dg-c1-s5"></template>
+<template id="dg-c1-s6"></template>
+<template id="dg-c2-s1"></template>
+<template id="dg-c2-s2"></template>
+<template id="dg-c2-s3"></template>
+<template id="dg-c2-s4"></template>
+<template id="dg-c2-s5"></template>
+<template id="dg-c2-s6"></template>
+<template id="dg-c3-s1"></template>
+<template id="dg-c3-s2"></template>
+<template id="dg-c3-s3"></template>
+<template id="dg-c3-s4"></template>
+<template id="dg-c3-s5"></template>
+<template id="dg-c3-s6"></template>
+<template id="dg-c3-s7"></template>
+<template id="dg-c3-s8"></template>
+<template id="dg-c3-s9"></template>
+<template id="dg-c3-s10"></template>
+<template id="dg-c4-s1"></template>
+<template id="dg-c4-s2"></template>
+<template id="dg-c4-s3"></template>
+<template id="dg-c4-s4"></template>
+
+<script>
+"use strict";
+const DATA = JSON.parse(document.getElementById("DATA").textContent);
+const $ = s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const SVGNS = "http://www.w3.org/2000/svg";
+const el = (tag,attrs,parent)=>{const e=document.createElementNS(SVGNS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;};
+const CIRC = "①②③④⑤⑥⑦⑧⑨⑩";
+
+/* ── theme ── */
+const themeBtn = $("#themeBtn");
+let theme = localStorage.getItem("decomp-theme")||"auto";
+function applyTheme(){
+  const dark = theme==="dark" || (theme==="auto" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.documentElement.classList.toggle("dark",dark);
+  themeBtn.textContent = theme==="auto"?"◐":(theme==="dark"?"☾":"☀");
+}
+themeBtn.onclick=()=>{theme=theme==="auto"?"dark":theme==="dark"?"light":"auto";localStorage.setItem("decomp-theme",theme);applyTheme();};
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change",applyTheme);
+applyTheme();
+
+/* ── chart state ── */
+let ci = 0;
+const chart = ()=>DATA.charts[ci];
+
+/* ── geometry ── */
+const P = n => chart().fixes[n] || (chart().airports[n]&&chart().airports[n].xy);
+function resolvePt(ref, evtPt){
+  if(ref==="EVT") return evtPt;
+  const m = ref.match(/^(\S+)>(\S+):([\d.]+)$/);
+  if(m){
+    const a = m[1]==="EVT"?evtPt:P(m[1]), b = m[2]==="EVT"?evtPt:P(m[2]), f=+m[3];
+    return [a[0]+(b[0]-a[0])*f, a[1]+(b[1]-a[1])*f];
+  }
+  return P(ref);
+}
+const dist=(a,b)=>Math.hypot(b[0]-a[0],b[1]-a[1]);
+function segEvtPt(seg){
+  const pts=[P(seg.from),...(seg.via||[]).map(P),P(seg.to)];
+  let total=0; const L=[];
+  for(let i=0;i<pts.length-1;i++){L.push(dist(pts[i],pts[i+1]));total+=L[i];}
+  let target=total/2;
+  for(let i=0;i<L.length;i++){
+    if(target<=L[i]){const f=target/L[i];return [pts[i][0]+(pts[i+1][0]-pts[i][0])*f, pts[i][1]+(pts[i+1][1]-pts[i][1])*f];}
+    target-=L[i];
+  }
+  return pts[0];
+}
+
+/* ── chart tabs ── */
+const tabsBox=$("#chartTabs");
+function renderTabs(){
+  tabsBox.innerHTML="";
+  DATA.charts.forEach((c,i)=>{
+    const b=document.createElement("button");
+    b.className="tab"+(i===ci?" active":"");
+    b.textContent=c.tab;
+    b.onclick=()=>{if(i!==ci)switchChart(i);};
+    tabsBox.appendChild(b);
+  });
+}
+function switchChart(i,keepInputs){
+  ci=i; stopAnim(); $("#animCard").style.display="none";
+  renderTabs(); buildChart(); renderChips(); renderNotes(); renderAptChips(); renderDgList();
+  $("#chartPill").textContent=chart().id+(chart().page?" · "+chart().page:"");
+  $("#effPill").textContent="EFF "+chart().eff+(chart().oxygen?" · "+chart().oxygen:"");
+  if(!keepInputs){$("#fixA").value="";$("#fixB").value="";}
+  selectSeg(1,keepInputs,true);
+}
+
+/* ── build route SVG ── */
+const svg = $("#rtSvg");
+let gTop=null;
+function buildChart(){
+  svg.innerHTML="";
+  const vb=chart().view||[1560,520];
+  svg.setAttribute("viewBox",`0 0 ${vb[0]} ${vb[1]}`);
+  const gDv=el("g",{},svg), gRt=el("g",{},svg), gApt=el("g",{},svg), gFix=el("g",{},svg);
+  gTop=el("g",{id:"gTop"},svg);
+  svg.appendChild(gTop);
+  chart().msa.forEach(m=>{
+    const g=el("g",{},svg);
+    el("rect",{x:m.xy[0]-52,y:m.xy[1]-16,width:104,height:46,class:"msab",rx:6},g);
+    const t1=el("text",{x:m.xy[0],y:m.xy[1],"text-anchor":"middle",class:"msat"},g);t1.textContent="最低安全高度";
+    const t2=el("text",{x:m.xy[0],y:m.xy[1]+20,"text-anchor":"middle",class:"msat","font-size":"14"},g);t2.textContent=m.v;
+    svg.insertBefore(g,gDv);
+  });
+  chart().diversions.forEach(d=>{
+    const a=P(d.from),b=P(d.to);
+    if(!a||!b)return;
+    const ln=el("line",{x1:a[0],y1:a[1],x2:b[0],y2:b[1],class:"dv"+(d.style==="blue"?" blue":"")},gDv);
+    ln.dataset.from=d.from;ln.dataset.to=d.to;
+    if(d.label){
+      const mx=(a[0]+b[0])/2, my=(a[1]+b[1])/2;
+      const t=el("text",{x:mx+6,y:my-4,class:"dist"+(d.unsure?" q":"")},gDv);t.textContent=d.label;
+    }
+  });
+  chart().legs.forEach(leg=>{
+    const a=P(leg.from),b=P(leg.to);
+    const hit=el("line",{x1:a[0],y1:a[1],x2:b[0],y2:b[1],class:"leg-hit"},gRt);
+    const ln=el("line",{x1:a[0],y1:a[1],x2:b[0],y2:b[1],class:"leg"+(leg.color==="dark"?" dark":"")},gRt);
+    ln.dataset.seg=leg.seg;
+    if(leg.seg>0)hit.onclick=()=>selectSeg(leg.seg);
+    const mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2;
+    if(leg.awy){const t=el("text",{x:mx,y:my+18,class:"awy","text-anchor":"middle"},gRt);t.textContent=leg.awy;}
+    if(leg.dist){const t=el("text",{x:mx,y:my-10,class:"dist"+(leg.unsure?" q":""),"text-anchor":"middle"},gRt);t.textContent=leg.dist;}
+  });
+  chart().segments.forEach(s=>{
+    const pt=segEvtPt(s);
+    const t=el("text",{x:pt[0],y:pt[1]-16,class:"seqmark","text-anchor":"middle"},gRt);
+    t.textContent=CIRC[s.seq-1]; t.onclick=()=>selectSeg(s.seq);
+  });
+  for(const [n,v] of Object.entries(chart().fixes)){
+    const [x,y]=v, anchor=v[2]||"a";
+    el("circle",{cx:x,cy:y,r:5,class:"fixdot"},gFix);
+    let tx=x,ty=y-12,ta="middle";
+    if(anchor==="b"){ty=y+24;}
+    else if(anchor==="l"){tx=x-10;ty=y+5;ta="end";}
+    else if(anchor==="r"){tx=x+10;ty=y+5;ta="start";}
+    const t=el("text",{x:tx,y:ty,class:"fixlbl"+(v[3]==="red"?" red":""),"text-anchor":ta},gFix);
+    t.textContent=n;
+  }
+  for(const [c,a] of Object.entries(chart().airports)){
+    const [x,y]=a.xy;
+    const g=el("g",{},gApt);
+    el("circle",{cx:x,cy:y,r:9,class:"apt-i"},g);
+    el("path",{d:`M ${x-5} ${y+2} L ${x+5} ${y+2} M ${x} ${y-5} L ${x} ${y+5} M ${x-3.5} ${y-2.5} L ${x+3.5} ${y+4.5} M ${x+3.5} ${y-2.5} L ${x-3.5} ${y+4.5}`,class:"apt-i","stroke-width":"1.2"},g);
+    const t=el("text",{x:x,y:y+26,class:"aptlbl","text-anchor":"middle","data-apt":c},g);
+    t.textContent=c; t.onclick=()=>showAptUse(c);
+  }
+}
+
+/* ── notes ── */
+function renderNotes(){
+  const nb=$("#chartNotes");
+  const notes=chart().notes||[];
+  if(!notes.length){nb.style.display="none";return;}
+  nb.style.display="";
+  nb.innerHTML="<b>原图注记:</b><br>"+notes.map(n=>"· "+n).join("<br>");
+}
+
+/* ── segment chips ── */
+function renderChips(){
+  const chipsBox=$("#segChips");chipsBox.innerHTML="";
+  chart().segments.forEach(s=>{
+    const c=document.createElement("button");c.className="chip";
+    c.innerHTML=`<span class="seq">${CIRC[s.seq-1]}</span>${s.from}–${s.to}`;
+    c.onclick=()=>selectSeg(s.seq);
+    chipsBox.appendChild(c);
+  });
+}
+
+/* ── selection ── */
+function selectSeg(seq,fromInput,noScroll){
+  stopAnim(); $("#animCard").style.display="none";
+  $$("#segChips .chip").forEach((c,i)=>c.classList.toggle("active",i===seq-1));
+  $$(".leg").forEach(l=>{
+    if(+l.dataset.seg===0)return;
+    l.classList.toggle("active",+l.dataset.seg===seq);
+    l.classList.toggle("dim",+l.dataset.seg!==seq);
+  });
+  drawEvt(seq);
+  renderSegCards([seq]);
+  if(!fromInput){const s=chart().segments[seq-1];$("#fixA").value=s.from;$("#fixB").value=s.to;}
+  if(!noScroll)$("#segCards").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function drawEvt(seq){
+  gTop.innerHTML="";
+  const s=chart().segments[seq-1], pt=segEvtPt(s);
+  el("circle",{cx:pt[0],cy:pt[1],r:6,class:"evt"},gTop);
+  el("circle",{cx:pt[0],cy:pt[1],r:6,class:"pulse"},gTop);
+  const t=el("text",{x:pt[0]+12,y:pt[1]+5,class:"evtlbl"},gTop);t.textContent="释压!";
+}
+
+/* ── fix inputs (cross-chart) ── */
+const allFixes=[];
+DATA.charts.forEach((c,i)=>c.route.forEach(f=>allFixes.push({f,chart:i,tag:c.id})));
+function attachSugg(inp,box){
+  inp.addEventListener("input",()=>{
+    const v=inp.value.trim().toUpperCase();
+    box.innerHTML="";box.style.display="none";
+    if(!v)return;
+    const seen=new Set();
+    const hits=allFixes.filter(x=>x.f.startsWith(v)&&!seen.has(x.f+x.chart)&&seen.add(x.f+x.chart)).slice(0,8);
+    if(hits.length){box.style.display="block";
+      hits.forEach(h=>{const d=document.createElement("div");
+        d.innerHTML=`${h.f} <span>${h.tag}</span>`;
+        d.onmousedown=e=>{e.preventDefault();inp.value=h.f;box.style.display="none";tryLocate();};
+        box.appendChild(d);});}
+  });
+  inp.addEventListener("blur",()=>setTimeout(()=>box.style.display="none",150));
+  inp.addEventListener("keydown",e=>{if(e.key==="Enter"){box.style.display="none";tryLocate();}});
+}
+attachSugg($("#fixA"),$("#suggA"));attachSugg($("#fixB"),$("#suggB"));
+$("#goBtn").onclick=tryLocate;
+function findSegs(c,a,b){
+  const adj=c.segments.filter(s=>{
+    const set=[s.from,...(s.via||[]),s.to];
+    return set.includes(a)&&set.includes(b);
+  }).map(s=>s.seq);
+  if(adj.length)return adj;
+  if(c.linear===false)return [];
+  const ia=c.route.indexOf(a), ib=c.route.indexOf(b);
+  if(ia<0||ib<0)return [];
+  const lo=Math.min(ia,ib),hi=Math.max(ia,ib);
+  return c.segments.filter(s=>{
+    const x=c.route.indexOf(s.from),y=c.route.indexOf(s.to);
+    if(x<0||y<0)return false;
+    return Math.min(x,y)<hi&&Math.max(x,y)>lo;
+  }).map(s=>s.seq);
+}
+function tryLocate(){
+  const a=$("#fixA").value.trim().toUpperCase(), b=$("#fixB").value.trim().toUpperCase();
+  if(!a||!b)return;
+  let found=null;
+  for(let k=0;k<DATA.charts.length;k++){
+    const idx=(ci+k)%DATA.charts.length;
+    const segs=findSegs(DATA.charts[idx],a,b);
+    if(segs.length){found={idx,segs};break;}
+  }
+  if(!found){
+    $("#segCards").innerHTML=`<section class="card"><div class="hint">⚠ 未匹配到航段。可用航路点:<br>${DATA.charts.map(c=>`<b>${c.id}</b>:${c.route.join(" · ")}`).join("<br>")}</div></section>`;
+    return;
+  }
+  if(found.idx!==ci)switchChart(found.idx,true);
+  if(found.segs.length===1)selectSeg(found.segs[0],true);
+  else{
+    renderSegCards(found.segs);
+    $$(".leg").forEach(l=>{
+      if(+l.dataset.seg===0)return;
+      l.classList.toggle("active",found.segs.includes(+l.dataset.seg));
+      l.classList.toggle("dim",!found.segs.includes(+l.dataset.seg));
+    });
+    drawEvt(found.segs[0]);
+  }
+}
+
+/* ── segment cards ── */
+function renderSegCards(seqs){
+  const host=$("#segCards");host.innerHTML="";
+  const c=chart();
+  seqs.forEach(seq=>{
+    const s=c.segments[seq-1];
+    const card=document.createElement("section");card.className="card";
+    const viaStr=s.via?` (经 ${s.via.join("、")})`:"";
+    card.innerHTML=`
+      <div class="seg-head">
+        <span class="seg-seq">${s.seq}</span>
+        <span class="seg-title">${s.from} – ${s.to}</span>
+        <span class="seg-meta">${viaStr} · ${c.id} · ${c.oxygen} · EFF ${c.eff}</span>
+      </div>
+      <div class="descent">
+        <span class="dn">立即下降至</span><span class="alt">${s.initAlt.toLocaleString()}</span><span class="u">FT</span>
+        ${s.altNote?`<span class="warn-chip" style="align-self:center">⚠ ${s.altNote}</span>`:""}
+        <span class="spd">Vmo / Mmo</span>
+      </div>`;
+    s.options.forEach(o=>{
+      const div=document.createElement("div");div.className="opt";
+      const altChips=o.alts.map(a=>`<span class="opt-alt-chip" data-apt="${a}" data-clk="1">${a}${c.airports[a]&&c.airports[a].name?"·"+c.airports[a].name:""}</span>`).join("");
+      const lvlChip=o.lvl!==s.initAlt?`<span class="opt-alt-chip lvl">↓ ${o.lvl.toLocaleString()} FT</span>`:"";
+      const warn=o.unsure?`<span class="warn-chip">⚠ 待核对:${o.unsure}</span>`:"";
+      const fuel=o.fuel?`<span class="warn-chip">⛽ 需检查油量</span>`:"";
+      div.innerHTML=`
+        <div class="opt-head"><span class="opt-n">${o.n}</span><span class="opt-sum">${o.sum}</span>${lvlChip}${altChips}${fuel}${warn}</div>
+        <div class="opt-raw">原文:${o.raw}</div>
+        <div class="opt-acts"><button class="btn solid" data-play>▶ 演示怎么飞</button></div>`;
+      div.querySelector("[data-play]").onclick=()=>playOption(s,o,o.anim,`${c.id} 航段${CIRC[s.seq-1]} 方案${o.n} → ${o.alts[0]}`);
+      div.querySelectorAll(".opt-alt-chip[data-clk]").forEach(ch=>{
+        ch.style.cursor="pointer";
+        ch.onclick=()=>{
+          const apt=ch.dataset.apt;
+          const track=(o.animAlt&&o.animAlt[apt])||o.anim;
+          playOption(s,o,track,`${c.id} 航段${CIRC[s.seq-1]} 方案${o.n} → ${apt}`);
+        };
+      });
+      card.appendChild(div);
+    });
+    host.appendChild(card);
+  });
+}
+
+/* ── airport reverse lookup (all charts) ── */
+function renderAptChips(){
+  const aptChips=$("#aptChips");aptChips.innerHTML="";
+  const codes=new Set();
+  DATA.charts.forEach(c=>Object.keys(c.airports).forEach(a=>codes.add(a)));
+  [...codes].forEach(code=>{
+    const b=document.createElement("button");b.className="chip";b.textContent=code;
+    b.onclick=()=>showAptUse(code);aptChips.appendChild(b);
+  });
+}
+function showAptUse(code){
+  $$("#aptChips .chip").forEach(c=>c.classList.toggle("active",c.textContent===code));
+  $$(".aptlbl").forEach(t=>t.classList.toggle("hl",t.dataset.apt===code));
+  const rows=[];
+  let nm="";
+  DATA.charts.forEach(c=>{
+    if(c.airports[code]&&c.airports[code].name)nm=c.airports[code].name;
+    c.segments.forEach(s=>s.options.forEach(o=>{
+      if(o.alts.includes(code))rows.push(`<div class="row"><span class="chartbadge">${c.id}</span><span class="seg-seq" style="width:24px;height:24px;font-size:13px">${s.seq}</span><b>${s.from}–${s.to}</b> 方案${o.n}:${o.sum} ${o.lvl!==s.initAlt?`(降${o.lvl.toLocaleString()}FT)`:""}</div>`);
+    }));
+  });
+  $("#aptResult").innerHTML=rows.length?`<b style="font-family:var(--mono)">${code}${nm?" · "+nm:""}</b> 可用于:${rows.join("")}`:`<b>${code}${nm?" · "+nm:""}</b>:程序文字未直接引用(仅图面参考连线)。`;
+  $$(".dv").forEach(l=>l.classList.toggle("hl",l.dataset.to===code||l.dataset.from===code));
+}
+
+/* ── animation ── */
+let animReq=null, marker=null, trail=null;
+const SPEEDS=[1,2,0.5];let spdIdx=0;
+$("#speedBtn").onclick=()=>{spdIdx=(spdIdx+1)%SPEEDS.length;$("#speedBtn").textContent=`速度 ${SPEEDS[spdIdx]}×`;};
+let lastRun=null;
+$("#replayBtn").onclick=()=>{if(lastRun)playOption(...lastRun);};
+function stopAnim(){if(animReq)cancelAnimationFrame(animReq);animReq=null;
+  if(marker){marker.remove();marker=null;}if(trail){trail.remove();trail=null;}}
+function playOption(seg,opt,animSpec,title){
+  lastRun=[seg,opt,animSpec,title];
+  stopAnim();
+  drawEvt(seg.seq);
+  $("#animCard").style.display="";$("#animTitle").textContent=title;
+  const evtPt=segEvtPt(seg);
+  const pts=animSpec.map(p=>resolvePt(p[0],evtPt));
+  const alts=animSpec.map(p=>p[1]);
+  const cum=[0];for(let i=1;i<pts.length;i++)cum.push(cum[i-1]+dist(pts[i-1],pts[i]));
+  const total=cum[cum.length-1]||1;
+  drawProfile(animSpec,cum,total,alts);
+  trail=el("polyline",{points:`${pts[0][0]},${pts[0][1]}`,fill:"none",stroke:"var(--accent)","stroke-width":"4","stroke-linecap":"round",opacity:".9"},gTop);
+  marker=el("path",{d:"M 0 -11 L 7 9 L 0 4.5 L -7 9 Z",class:"plane"},gTop);
+  const dur=7000, t0=performance.now();
+  function frame(now){
+    const t=Math.min(1,(now-t0)*SPEEDS[spdIdx]/dur);
+    const d=t*total;
+    let i=1;while(i<cum.length-1&&cum[i]<d)i++;
+    const f=(d-cum[i-1])/((cum[i]-cum[i-1])||1);
+    const x=pts[i-1][0]+(pts[i][0]-pts[i-1][0])*f, y=pts[i-1][1]+(pts[i][1]-pts[i-1][1])*f;
+    const ang=Math.atan2(pts[i][1]-pts[i-1][1],pts[i][0]-pts[i-1][0])*180/Math.PI+90;
+    marker.setAttribute("transform",`translate(${x},${y}) rotate(${ang})`);
+    trail.setAttribute("points",trail.getAttribute("points")+` ${x},${y}`);
+    const alt=alts[i-1]+(alts[i]-alts[i-1])*f;
+    updateProfileCursor(d/total,alt);
+    if(t<1)animReq=requestAnimationFrame(frame);
+  }
+  animReq=requestAnimationFrame(frame);
+  $("#animCard").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+let profCursor=null, profAltTxt=null, profGeom=null;
+function altY(a){return 28+(35000-a)/35000*168;}
+function drawProfile(spec,cum,total,alts){
+  const p=$("#profSvg");p.innerHTML="";
+  const X0=70,X1=830;
+  const xs=cum.map(c=>X0+(c/total)*(X1-X0));
+  const keyAlts=[...new Set([35000,...alts])].filter(a=>a>0);
+  keyAlts.forEach(a=>{
+    el("line",{x1:X0,y1:altY(a),x2:X1,y2:altY(a),class:"prof-grid"},p);
+    const t=el("text",{x:X0-8,y:altY(a)+4,"text-anchor":"end",class:"profile-lbl"},p);
+    t.textContent=a===35000?"巡航":a.toLocaleString();
+  });
+  el("line",{x1:X0,y1:altY(0),x2:X1,y2:altY(0),stroke:"var(--ink2)","stroke-width":"1.5"},p);
+  const g=el("text",{x:X0-8,y:altY(0)+4,"text-anchor":"end",class:"profile-lbl"},p);g.textContent="落地";
+  spec.forEach((s,i)=>{
+    const name=s[0]==="EVT"?"释压":(s[0].includes(">")?"":s[0]);
+    if(name){const t=el("text",{x:xs[i],y:altY(0)+22,"text-anchor":"middle",class:"profile-lbl","font-weight":"700"},p);t.textContent=name;
+      el("line",{x1:xs[i],y1:altY(0),x2:xs[i],y2:altY(0)+6,stroke:"var(--ink2)"},p);}
+  });
+  const ptsStr=spec.map((s,i)=>`${xs[i]},${altY(alts[i])}`).join(" ");
+  el("polyline",{points:ptsStr,class:"prof-line",opacity:".25"},p);
+  profGeom={xs,alts,X0,X1};
+  profCursor=el("circle",{cx:xs[0],cy:altY(alts[0]),r:7,fill:"var(--accent)",stroke:"#fff","stroke-width":"2"},p);
+  profAltTxt=el("text",{x:xs[0]+12,y:altY(alts[0])-10,class:"profile-alt"},p);
+  el("text",{x:xs[0],y:altY(35000)-10,class:"evtlbl","text-anchor":"start"},p).textContent="⚡释压";
+  profGeom.trace=el("polyline",{points:`${xs[0]},${altY(alts[0])}`,class:"prof-line"},p);
+}
+function updateProfileCursor(frac,alt){
+  if(!profGeom)return;
+  const x=profGeom.X0+frac*(profGeom.X1-profGeom.X0), y=altY(alt);
+  profCursor.setAttribute("cx",x);profCursor.setAttribute("cy",y);
+  profAltTxt.setAttribute("x",x+12);profAltTxt.setAttribute("y",y-10);
+  profAltTxt.textContent=Math.round(alt/100)*100>0?`${(Math.round(alt/100)*100).toLocaleString()} ft`:"落地";
+  profGeom.trace.setAttribute("points",profGeom.trace.getAttribute("points")+` ${x},${y}`);
+}
+
+/* ── archify decision diagrams ── */
+async function gunzipB64(b64){
+  const bin=Uint8Array.from(atob(b64.replace(/\s+/g,"")),c=>c.charCodeAt(0));
+  const stream=new Blob([bin]).stream().pipeThrough(new DecompressionStream("gzip"));
+  return await new Response(stream).text();
+}
+function renderDgList(){
+  const dgList=$("#dgList");dgList.innerHTML="";
+  $("#dgPill").textContent=chart().id;
+  const ck=chart().key;
+  chart().segments.forEach(s=>{
+    const tpl=document.getElementById(`dg-${ck}-s${s.seq}`);
+    const gz=document.getElementById(`dgz-${ck}-s${s.seq}`);
+    const det=document.createElement("details");det.className="sec";
+    const hasDg=(tpl&&tpl.innerHTML.trim().length>50)||(gz&&gz.textContent.length>100);
+    det.innerHTML=`<summary><span class="seg-seq" style="width:24px;height:24px;font-size:13px">${s.seq}</span> ${s.from} – ${s.to} 决策流程</summary><div class="inner"></div>`;
+    const inner=det.querySelector(".inner");
+    if(hasDg){
+      det.addEventListener("toggle",async()=>{
+        if(!det.open||inner.dataset.loading||inner.querySelector("iframe"))return;
+        inner.dataset.loading="1";
+        let html="";
+        if(gz&&gz.textContent.length>100){
+          if(!window.DecompressionStream){inner.innerHTML=`<div class="hint">此浏览器过旧,无法解压内嵌决策图(需 iOS 16.4+ / 近两年桌面浏览器)。</div>`;return;}
+          try{html=await gunzipB64(gz.textContent);}catch(e){inner.innerHTML=`<div class="hint">决策图解压失败:${e}</div>`;return;}
+        }else{html=tpl.innerHTML;}
+        const f=document.createElement("iframe");f.className="dg";
+        f.srcdoc=html.startsWith("<!DOCTYPE")?html:"<!DOCTYPE html>"+html;
+        inner.appendChild(f);
+      });
+    }else{
+      inner.innerHTML=`<div class="hint">决策图未随本版本打包(源码版)。</div>`;
+    }
+    dgList.appendChild(det);
+  });
+}
+
+/* ── checklist ── */
+$("#chkList").innerHTML=`<p class="hint">v0.5:D574-1 已按用户复核修正;D501 图面已按高清图重画;D527-1、D574-2 待复核,标 ⚠ 条目请对照原图确认。</p>
+<table class="chk"><tr><th>条目</th><th>录入值</th><th>状态</th></tr>${
+  DATA.checklist.map(c=>`<tr><td>${c.item}</td><td>${c.val}</td><td class="${c.conf.includes("⚠")||c.conf.includes("低")?"conf-l":"conf-h"}">${c.conf}</td></tr>`).join("")
+}</table>`;
+
+/* ── init ── */
+switchChart(0);
+
+/* ── PWA:仅在 http(s) 环境注册离线缓存,单文件本地打开时自动跳过 ── */
+if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)){
+  addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+}
+</script>
+</body>
+</html>
