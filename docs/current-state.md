@@ -5,7 +5,10 @@ Status date: 2026-09-22. Current release: v0.6 PWA.
 ## Delivery
 
 - Primary entry: `https://decomp.reylold2005.com/`, served from the HP host through Cloudflare Tunnel.
-- HP service: `decomp-quickref`, bound to `127.0.0.1:8082` using `compose.yaml`.
+- HP service: `decomp-quickref`, bound to `127.0.0.1:8082`. Live deployment verified on 2026-09-22: `/srv/data/decomp-quickref`, Nginx image built by that directory's Compose/Dockerfile, with static files copied into the image (no bind mounts). The repository's Python Compose file is an alternative local setup, not the current HP configuration.
+- Prefer Tailscale for HP deployments: check `/Applications/Tailscale.app/Contents/MacOS/Tailscale status`, then `ssh reylold2005@100.126.166.119` (device `hp`, hostname `xuhui-app01`, existing Mac SSH key). The old `discourse`/`discourse-ts` aliases and `pilot0` account do not target the current HP deployment. Do not ask the user to rediscover this connection.
+- If the Tailscale link is slow, allow a longer SSH handshake and reuse an SSH control connection; DERP fallback can have high latency. Do not change network/tunnel settings as part of a site content release.
+- HP release: back up `/srv/data/decomp-quickref` and tag the existing image; sync only built `dist/site/` assets into that directory, preserve its server configuration, then run `docker compose up -d --build decomp-quickref` there. Verify `http://127.0.0.1:8082/` and the public domain against the local artifact hashes. A GitHub push alone does not update HP.
 - GitHub Pages fallback: `https://reylold2005-fly.github.io/decomp-quickref/`
 - The repository root contains the currently deployed offline PWA.
 - `src/index.html` is the editable application/data source.
