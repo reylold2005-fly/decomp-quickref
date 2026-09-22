@@ -27,7 +27,7 @@ for (const [key, n] of Object.entries(CHARTS)) {
 }
 
 mkdirSync(join(root, "dist"), { recursive: true });
-const out = join(root, "dist/释压程序速查_程三土版_v0.6.html");
+const out = join(root, "dist/释压程序速查_v0.6.html");
 writeFileSync(out, html);
 console.log("built:", out, (html.length / 1024 / 1024).toFixed(2), "MB");
 
@@ -39,7 +39,7 @@ for (const ic of ["icon-512.png", "icon-192.png", "icon-180.png"]) {
   copyFileSync(join(root, "assets", ic), join(site, ic));
 }
 writeFileSync(join(site, "manifest.webmanifest"), JSON.stringify({
-  name: "释压应急程序速查(程三土版)",
+  name: "释压应急程序速查",
   short_name: "释压速查",
   start_url: "./",
   scope: "./",

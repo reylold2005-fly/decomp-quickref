@@ -20,7 +20,9 @@ The web application makes no external requests after installation and can be add
 - D501 and D574-2 still contain items marked for verification.
 - D527-1 contains four segments; oxygen-system applicability remains explicitly pending.
 - D527 page 2 has not been entered.
-- The RVSM contingency text remains a public ICAO Doc 4444 placeholder by user decision.
+- D501 and D527-1 RVSM text uses the user-supplied Russian procedure, translated into Chinese on 2026-09-22. D574-1/2 retain the pending-verification ICAO placeholder.
+- D527-1: user confirmed SUKOR → LONKA → MIKET on A91, joining A817 after MIKET on 2026-09-22. Segment 3 option 2 and the same path in segment 2 option 3 now pass LONKA; other pending labels remain.
+- The route map has a replay control for the selected option; replay preserves scroll position and chart/segment changes clear playback selection.
 
 These statuses must remain visible. A newer effective company document supersedes this tool even if the PWA still loads correctly.
 

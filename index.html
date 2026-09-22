@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0b62d6">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>释压应急程序速查 · 程三土版</title>
+<title>释压应急程序速查</title>
 <style>
 :root{
   --bg:#f4f6f9; --panel:#ffffff; --ink:#1a2332; --ink2:#5a6a80; --line:#dde4ee;
@@ -133,6 +133,7 @@ table.chk th,table.chk td{border:1px solid var(--line);padding:5px 8px;text-alig
 table.chk th{background:var(--bg);font-size:11.5px;color:var(--ink2)}
 .conf-l{color:var(--amber);font-weight:700}
 .conf-h{color:var(--green);font-weight:700}
+.signature{text-align:right;font-size:10px;color:var(--ink2);opacity:.55;margin-top:8px;font-weight:400}
 footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink2);padding:0 14px}
 .hint{font-size:12.5px;color:var(--ink2)}
 .apt-panel .row{display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px dashed var(--line);font-size:13.5px;flex-wrap:wrap}
@@ -150,7 +151,7 @@ footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink2);padd
   <div class="bar">
     <div class="logo">✈</div>
     <div>
-      <h1>释压应急程序速查 <span style="font-size:12px;color:var(--accent)">程三土版</span></h1>
+      <h1>释压应急程序速查</h1>
       <div class="sub">D501 · D527 · D574 系列</div>
     </div>
     <div class="spacer"></div>
@@ -184,6 +185,10 @@ footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink2);padd
 
   <section class="card">
     <h2><span class="n">2</span>航路示意图(仿原图布局 · 点航段或机场可交互)<span class="pill" id="chartPill"></span></h2>
+    <div class="opt-acts" id="mapPlayback" style="padding-left:0;display:none;margin-bottom:10px">
+      <button class="btn solid" id="mapReplayBtn">↻ 重复播放</button>
+      <span class="hint" id="mapAnimTitle" style="align-self:center" aria-live="polite"></span>
+    </div>
     <div class="chartbox"><svg class="rt" id="rtSvg" viewBox="0 0 1560 520"></svg></div>
     <div class="hint">红实线=航路(圈号=程序航段) · 黑实线=图上黑色航段 · 红虚线=备降路径 · 蓝虚线=原图蓝色连线 · 距离标注:海里(括号内为该线段最低安全高度,单位米,含义待最终确认) · <span style="color:var(--amber);font-weight:700">琥珀色数字=待复核</span></div>
     <div class="notesbox" id="chartNotes" style="display:none"></div>
@@ -207,7 +212,18 @@ footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink2);padd
     <div id="aptResult" class="hint" style="margin-top:10px">点选上方机场代码。</div>
   </section>
 
-  <section class="card">
+  <section class="card" id="rvsmRussia" style="display:none">
+    <h2><span class="n">5</span>RVSM 空域应急脱离程序(俄罗斯)</h2>
+    <div class="rvsm-warn">⚠ 按用户提供的俄罗斯程序英文原文翻译(2026-09-22)。仅供参考学习,运行中以公司现行有效版本程序简令为准。</div>
+    <div class="rvsm-step"><div class="k">1</div><div><b>遇到危及飞行安全的情况,可自主改变高度并立即报告</b><p>在指定高度(飞行高度层)遇到危及飞行安全的情况(危险天气现象、设备故障等)时,飞行员有权自主改变高度(飞行高度层),并立即向相应空中交通管制单位(ATC)报告。</p></div></div>
+    <div class="rvsm-step"><div class="k">2</div><div><b>保持高度,向右转离航路 30°</b><p>在不改变高度(飞行高度层)的情况下,向右转离航路或飞行航线 <b>30°</b>,并向 ATC 报告。</p></div></div>
+    <div class="rvsm-step"><div class="k">3</div><div><b>距航路中心线 16.2 NM(30 km)后,恢复原航向并改变高度</b><p>当距航路中心线或飞行航线的侧向距离达到 <b>16.2 NM(30 km)</b> 后,恢复原飞行航向,同时改变高度至所选高度(飞行高度层)。</p></div></div>
+    <div class="rvsm-step"><div class="k">4</div><div><b>紧急情况下,转离后立即下降</b><p>紧急情况下,应在转离航路或飞行航线后立即实施下降。</p></div></div>
+    <div class="rvsm-step"><div class="k">5</div><div><b>到达新的飞行高度层,获 ATC 许可后重新加入航路</b><p>到达新的飞行高度层后,飞行员应在获得 ATC 许可后进入航路。</p></div></div>
+    <p class="src">适用展示:D501、D527-1。来源:用户提供的俄罗斯高度(飞行高度层)应急改变程序英文原文,中文翻译。</p>
+  </section>
+
+  <section class="card" id="rvsmGeneric">
     <h2><span class="n">5</span>RVSM 空域应急脱离程序(通用框架)</h2>
     <div class="rvsm-warn">⚠ 占位内容:依据 ICAO Doc 4444 §15.2 及 Doc 7030(EUR)公开资料整理,<u>尚未与公司运行手册核对</u>,禁止作为运行依据。收到公司手册页后将替换为公司版本。</div>
     <div class="rvsm-step"><div class="k">1</div><div><b>戴好氧气面罩,建立机组联系</b><p>释压后立即完成记忆项目;确认座舱高度与氧气流量。</p></div></div>
@@ -232,7 +248,8 @@ footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink2);padd
 
 <footer>
   数据源:D501(修订 俞快 / 校核 刘政东 · EFF 2026-01-28)· D527-1(修订 杨烨坤 / 校核 戈葆尔 · EFF 2026-01-28)· D574-1/2(修订 黄健、丁婕 / 校核 季彤彤 · EFF 2026-04-21)· 性能值班 021-22379864<br>
-  <b>程三土版</b> v0.6 · 离线单文件 · 仅供参考学习,以公司现行有效版本为准
+  v0.6 · 离线单文件 · 仅供参考学习,以公司现行有效版本为准
+  <div class="signature">三土</div>
 </footer>
 
 <!-- ═══════════════ 数据区:换版只改这里 ═══════════════ -->
@@ -504,9 +521,10 @@ footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink2);padd
         {"from":"TISBU","to":"SUKOR","label":"","style":"blue"},
         {"from":"UNKL","to":"ROGMA","label":"","style":"blue"},
         {"from":"ROGMA","to":"MIKET","label":"","style":"blue"},
-        {"from":"MIKET","to":"UNAA","label":"","style":"blue"},
+        {"from":"MIKET","to":"UNAA","label":"A817","style":"blue"},
         {"from":"UNAA","to":"UNNT","label":"","style":"blue"},
-        {"from":"MIKET","to":"LONKA","label":"","style":"blue","unsure":true},
+        {"from":"MIKET","to":"LONKA","label":"A91","style":"blue"},
+        {"from":"LONKA","to":"SUKOR","label":"A91","style":"blue"},
         {"from":"SUKOR","to":"BD","label":"","style":"blue"},
         {"from":"NEBOK","to":"BD","label":"","style":"blue","unsure":true},
         {"from":"BD","to":"UIII","label":"","style":"blue"},
@@ -538,8 +556,8 @@ footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink2);padd
              "anim":[["EVT",35000],["EVT>BD:0.5",10000],["BD",10000],["UIII",0]]},
             {"n":3,"sum":"沿R497向西至BD台,沿蓝色航路备降","alts":["UNAA","UNNT"],"lvl":10000,"fuel":true,
              "raw":"或沿R497向西飞至BD台,沿蓝色航路备降UNAA/UNNT(需检查油量);",
-             "anim":[["EVT",35000],["EVT>BD:0.5",10000],["BD",10000],["SUKOR",10000],["MIKET",10000],["UNAA",0]],
-             "animAlt":{"UNNT":[["EVT",35000],["EVT>BD:0.5",10000],["BD",10000],["SUKOR",10000],["MIKET",10000],["UNAA",6000],["UNNT",0]]}},
+             "anim":[["EVT",35000],["EVT>BD:0.5",10000],["BD",10000],["SUKOR",10000],["LONKA",10000],["MIKET",10000],["UNAA",0]],
+             "animAlt":{"UNNT":[["EVT",35000],["EVT>BD:0.5",10000],["BD",10000],["SUKOR",10000],["LONKA",10000],["MIKET",10000],["UNAA",6000],["UNNT",0]]}},
             {"n":4,"sum":"沿R497至BD台,沿蓝色航路备降","alts":["UNKL"],"lvl":10000,"fuel":true,
              "raw":"或沿R497飞至BD台,沿蓝色航路备降UNKL(需检查油量)。",
              "anim":[["EVT",35000],["EVT>BD:0.5",10000],["BD",10000],["SUKOR",10000],["TISBU",10000],["UNKL",0]]}
@@ -553,8 +571,8 @@ footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink2);padd
              "anim":[["EVT",35000],["EVT>BD:0.4",13000],["BD",13000],["BD>UIII:0.3",10000],["UIII",0]]},
             {"n":2,"sum":"沿蓝色航路备降","alts":["UNAA","UNNT"],"lvl":10000,"fuel":true,
              "raw":"或沿蓝色航路备降UNAA/UNNT(需检查油量);",
-             "anim":[["EVT",35000],["EVT>BD:0.4",13000],["BD",13000],["SUKOR",10000],["MIKET",10000],["UNAA",0]],
-             "animAlt":{"UNNT":[["EVT",35000],["EVT>BD:0.4",13000],["BD",13000],["SUKOR",10000],["MIKET",10000],["UNAA",6000],["UNNT",0]]}},
+             "anim":[["EVT",35000],["EVT>BD:0.4",13000],["BD",13000],["SUKOR",10000],["LONKA",10000],["MIKET",10000],["UNAA",0]],
+             "animAlt":{"UNNT":[["EVT",35000],["EVT>BD:0.4",13000],["BD",13000],["SUKOR",10000],["LONKA",10000],["MIKET",10000],["UNAA",6000],["UNNT",0]]}},
             {"n":3,"sum":"沿蓝色航路备降","alts":["UNKL"],"lvl":10000,"fuel":true,
              "raw":"或沿蓝色航路备降UNKL(需检查油量)。",
              "anim":[["EVT",35000],["EVT>BD:0.4",13000],["BD",13000],["SUKOR",10000],["TISBU",10000],["UNKL",0]]}
@@ -882,7 +900,7 @@ footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink2);padd
   "checklist": [
     {"item":"D527-1 程序文字(4航段全部方案)","val":"按高清截图录入,含②段直接降10000、③段两级下降、4处'需检查油量'","conf":"高(待用户复核)"},
     {"item":"D527-1 适用氧气系统","val":"截图未含氧气系统标注,请告知(12分钟/22分钟?)","conf":"低 ⚠ 请补充"},
-    {"item":"D527-1 蓝色航路走向","val":"BD→UNAA/UNNT/UNKL 的演示路径(经SUKOR/MIKET/TISBU)为推定;『地图作业』标注含义待确认","conf":"低 ⚠ 请核对"},
+    {"item":"D527-1 蓝色航路走向","val":"用户已确认 SUKOR→LONKA→MIKET 为 A91,MIKET 后加入 A817(2026-09-22);其他蓝色连线及『地图作业』含义仍待核对","conf":"低 ⚠ 请核对"},
     {"item":"D527-1 距离","val":"69(3323)/51(3384)/219(3102)/193(3116)","conf":"高(待用户复核)"},
     {"item":"D501 程序文字(10航段全部方案)","val":"按高清截图录入,含④段红字14000ft、⑧段'直飞NEBOK'、D70T/D208G两条注记","conf":"高(待用户复核)"},
     {"item":"D501 航段距离","val":"171(3540)/216(3353)/35(3171)/197(3750)/70(3200)/100(3353)/95(3353)/163(3476)/241(4020)/208(3628)/147(3415)/238(3871)/80(3871)","conf":"高(待用户复核)"},
@@ -897,7 +915,7 @@ footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink2);padd
     {"item":"D574-2 航段距离","val":"51(2348)/13(3338)/95(4329)/122(3841)/54(5045)/32(5045)/44(5045)","conf":"高(待用户复核)"},
     {"item":"D574-2 待定连线","val":"98(4329)归属(SUBUT→UBBG?)、63(5045)/53(5045)/102(5045)端点、OKTAT–KONUL红线16(5045)、LTCG–ROLIN蓝虚线","conf":"低 ⚠ 请核对"},
     {"item":"机场中文名","val":"参考信息,非原图内容(LTCT/LTCD/LTCB暂缺)","conf":"中"},
-    {"item":"RVSM脱离程序","val":"公开资料占位,用户确认暂缓,待公司手册替换","conf":"低 ⚠(已知悉)"},
+    {"item":"RVSM脱离程序","val":"D501、D527-1 已按用户提供原文替换为俄罗斯程序中文翻译(2026-09-22);D574-1/2 仍为公开资料占位,待公司手册核对","conf":"低 ⚠(已知悉)"},
     {"item":"演示动画轨迹/剖面","val":"根据程序文字推定,仅示意","conf":"参考"}
   ]
 }
@@ -992,7 +1010,10 @@ function renderTabs(){
   });
 }
 function switchChart(i,keepInputs){
-  ci=i; stopAnim(); $("#animCard").style.display="none";
+  ci=i; resetPlayback();
+  const russian = ["D501","D527-1"].includes(chart().id);
+  $("#rvsmRussia").style.display=russian?"":"none";
+  $("#rvsmGeneric").style.display=russian?"none":"";
   renderTabs(); buildChart(); renderChips(); renderNotes(); renderAptChips(); renderDgList();
   $("#chartPill").textContent=chart().id+(chart().page?" · "+chart().page:"");
   $("#effPill").textContent="EFF "+chart().eff+(chart().oxygen?" · "+chart().oxygen:"");
@@ -1084,7 +1105,7 @@ function renderChips(){
 
 /* ── selection ── */
 function selectSeg(seq,fromInput,noScroll){
-  stopAnim(); $("#animCard").style.display="none";
+  resetPlayback();
   $$("#segChips .chip").forEach((c,i)=>c.classList.toggle("active",i===seq-1));
   $$(".leg").forEach(l=>{
     if(+l.dataset.seg===0)return;
@@ -1150,6 +1171,7 @@ function tryLocate(){
     const segs=findSegs(DATA.charts[idx],a,b);
     if(segs.length){found={idx,segs};break;}
   }
+  resetPlayback();
   if(!found){
     $("#segCards").innerHTML=`<section class="card"><div class="hint">⚠ 未匹配到航段。可用航路点:<br>${DATA.charts.map(c=>`<b>${c.id}</b>:${c.route.join(" · ")}`).join("<br>")}</div></section>`;
     return;
@@ -1241,11 +1263,21 @@ let animReq=null, marker=null, trail=null;
 const SPEEDS=[1,2,0.5];let spdIdx=0;
 $("#speedBtn").onclick=()=>{spdIdx=(spdIdx+1)%SPEEDS.length;$("#speedBtn").textContent=`速度 ${SPEEDS[spdIdx]}×`;};
 let lastRun=null;
-$("#replayBtn").onclick=()=>{if(lastRun)playOption(...lastRun);};
+function replayCurrent(){if(lastRun)playOption(...lastRun,false);}
+$("#replayBtn").onclick=replayCurrent;
+$("#mapReplayBtn").onclick=replayCurrent;
+function resetPlayback(){
+  stopAnim(); lastRun=null;
+  $("#animCard").style.display="none";
+  $("#mapPlayback").style.display="none";
+  $("#mapAnimTitle").textContent="";
+}
 function stopAnim(){if(animReq)cancelAnimationFrame(animReq);animReq=null;
   if(marker){marker.remove();marker=null;}if(trail){trail.remove();trail=null;}}
-function playOption(seg,opt,animSpec,title){
+function playOption(seg,opt,animSpec,title,scrollToProfile=true){
   lastRun=[seg,opt,animSpec,title];
+  $("#mapPlayback").style.display="flex";
+  $("#mapAnimTitle").textContent=title;
   stopAnim();
   drawEvt(seg.seq);
   $("#animCard").style.display="";$("#animTitle").textContent=title;
@@ -1272,7 +1304,7 @@ function playOption(seg,opt,animSpec,title){
     if(t<1)animReq=requestAnimationFrame(frame);
   }
   animReq=requestAnimationFrame(frame);
-  $("#animCard").scrollIntoView({behavior:"smooth",block:"nearest"});
+  if(scrollToProfile)$("#animCard").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 let profCursor=null, profAltTxt=null, profGeom=null;
 function altY(a){return 28+(35000-a)/35000*168;}
