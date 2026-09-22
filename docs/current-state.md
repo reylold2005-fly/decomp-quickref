@@ -4,13 +4,15 @@ Status date: 2026-09-22. Current release: v0.6 PWA.
 
 ## Delivery
 
-- GitHub Pages: `https://reylold2005-fly.github.io/decomp-quickref/`
+- Primary entry: `https://decomp.reylold2005.com/`, served from the HP host through Cloudflare Tunnel.
+- HP service: `decomp-quickref`, bound to `127.0.0.1:8082` using `compose.yaml`.
+- GitHub Pages fallback: `https://reylold2005-fly.github.io/decomp-quickref/`
 - The repository root contains the currently deployed offline PWA.
 - `src/index.html` is the editable application/data source.
 - `archify/gen-dg.mjs` and `archify/spec-*.json` preserve the decision-diagram source.
 - `build.mjs` produces the standalone file and `dist/site` deployment directory.
 
-The web application makes no external requests after installation and can be added to the iPad home screen. Embedded decision diagrams use `DecompressionStream`, requiring iOS 16.4 or a recent desktop browser.
+The web application makes no external requests after installation and can be added to the iPad home screen. Embedded decision diagrams use `DecompressionStream`, requiring iOS 16.4 or a recent desktop browser. The HP and Pages copies are two delivery paths for the same static artifact; they are not separate data sources.
 
 ## Data verification boundary
 

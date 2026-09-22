@@ -9,6 +9,6 @@ Rules:
 - Change source data in `src/index.html`; regenerate decision specifications and the deployable site after a reviewed data change.
 - Preserve all `⚠`/pending-verification labels until the user verifies the corresponding source.
 - Do not commit company source documents, crew data, credentials, or private distribution records.
-- The repository root is the GitHub Pages artifact; source and generators are retained alongside it for reproducibility.
+- The repository root is the deployed static artifact used by the HP service and GitHub Pages fallback; source and generators are retained alongside it for reproducibility.
 
 After a source change, run `node build.mjs`, compare the generated `dist/site` with the repository root, and test offline loading and route lookup on a narrow mobile viewport.

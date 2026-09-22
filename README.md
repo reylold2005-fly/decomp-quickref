@@ -4,7 +4,8 @@
 
 输入两个航路点后显示对应航段的释压应急程序、飞行演示和决策流程图。网页可完全离线使用。
 
-- 在线地址：<https://reylold2005-fly.github.io/decomp-quickref/>
+- 正式地址（HP + Cloudflare Tunnel）：<https://decomp.reylold2005.com/>
+- 备用地址（GitHub Pages）：<https://reylold2005-fly.github.io/decomp-quickref/>
 - iPad：Safari 打开 → 分享 → 添加到主屏幕
 
 ## 仓库结构
@@ -24,3 +25,9 @@ node build.mjs
 ```
 
 输出为 `dist/释压程序速查_程三土版_v0.6.html` 和 `dist/site/`。发布前必须核对当前有效资料、保留待验证标记，并测试离线重载。
+
+## 部署
+
+服务器使用 `compose.yaml` 启动静态文件服务，仅监听宿主机
+`127.0.0.1:8082`；Cloudflare Tunnel 将
+`decomp.reylold2005.com` 转发到 `http://localhost:8082`。
