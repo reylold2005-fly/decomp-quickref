@@ -7,6 +7,8 @@
 <meta name="theme-color" content="#0b62d6">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
+<meta name="app-version" content="V1.5">
+<meta name="app-build" content="__BUILD_ID__">
 <title>释压应急程序速查</title>
 <style>
 :root{
@@ -169,6 +171,12 @@ footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink2);padd
 </header>
 
 <main class="wrap">
+  <div class="update-bar" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
+    <span class="pill">当前版本 V1.5</span>
+    <button class="btn ghost" id="checkUpdateBtn">检查更新</button>
+    <button class="btn solid" id="applyUpdateBtn" hidden>刷新使用新版</button>
+    <span class="hint" id="updateStatus" role="status" aria-live="polite">可离线使用；联网后可检查更新。</span>
+  </div>
 
   <section class="card">
     <h2><span class="n">1</span>我在哪 —— 输入航路点或航路编号,也可输入前后两点</h2>
@@ -247,7 +255,7 @@ footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink2);padd
   </section>
 
   <details class="sec card" style="padding:0">
-    <summary>📋 数据核对清单(v0.2)</summary>
+    <summary>📋 数据核对清单</summary>
     <div class="inner" id="chkList"></div>
   </details>
 
@@ -255,7 +263,7 @@ footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink2);padd
 
 <footer>
   数据源:D501(修订 俞快 / 校核 刘政东 · EFF 2026-01-28)· D527-1(修订 杨烨坤 / 校核 戈葆尔 · EFF 2026-01-28)· D574-1/2(修订 黄健、丁婕 / 校核 季彤彤 · EFF 2026-04-21)· 性能值班 021-22379864<br>
-  v0.6 · 离线单文件 · 仅供参考学习,以公司现行有效版本为准
+  V1.5 · 离线单文件 · 仅供参考学习,以公司现行有效版本为准
   <div class="signature">三土</div>
 </footer>
 
@@ -1428,7 +1436,7 @@ function renderDgList(){
 }
 
 /* ── checklist ── */
-$("#chkList").innerHTML=`<p class="hint">v0.5:D574-1 已按用户复核修正;D501 图面已按高清图重画;D527-1、D574-2 待复核,标 ⚠ 条目请对照原图确认。</p>
+$("#chkList").innerHTML=`<p class="hint">D574-1 已按用户复核修正;D501 图面已按高清图重画;D527-1、D574-2 待复核,标 ⚠ 条目请对照原图确认。</p>
 <table class="chk"><tr><th>条目</th><th>录入值</th><th>状态</th></tr>${
   DATA.checklist.map(c=>`<tr><td>${c.item}</td><td>${c.val}</td><td class="${c.conf.includes("⚠")||c.conf.includes("低")?"conf-l":"conf-h"}">${c.conf}</td></tr>`).join("")
 }</table>`;
@@ -1436,9 +1444,76 @@ $("#chkList").innerHTML=`<p class="hint">v0.5:D574-1 已按用户复核修正;D5
 /* ── init ── */
 switchChart(0);
 
-/* ── PWA:仅在 http(s) 环境注册离线缓存,单文件本地打开时自动跳过 ── */
+/* ── PWA:手动检查,完整缓存后提示刷新,不打断当前查看 ── */
+const pageBuild=document.querySelector('meta[name="app-build"]').content;
+const checkUpdateBtn=$("#checkUpdateBtn"), applyUpdateBtn=$("#applyUpdateBtn"), updateStatus=$("#updateStatus");
+let swRegistration=null, updateBusy=false;
+function workerVersion(worker){
+  return new Promise((resolve,reject)=>{
+    if(!worker){reject(new Error("No worker"));return;}
+    const channel=new MessageChannel();
+    const finish=(error,data)=>{clearTimeout(timer);channel.port1.close();error?reject(error):resolve(data);};
+    const timer=setTimeout(()=>finish(new Error("Version timeout")),5000);
+    channel.port1.onmessage=e=>finish(null,e.data);
+    worker.postMessage({type:"GET_VERSION"},[channel.port2]);
+  });
+}
+function waitActivated(worker){
+  return new Promise((resolve,reject)=>{
+    if(!worker){reject(new Error("No worker"));return;}
+    const finish=error=>{clearTimeout(timer);worker.removeEventListener("statechange",changed);error?reject(error):resolve();};
+    const changed=()=>{
+      if(worker.state==="activated")finish();
+      else if(worker.state==="redundant")finish(new Error("Install failed"));
+    };
+    const timer=setTimeout(()=>finish(new Error("Install timeout")),45000);
+    worker.addEventListener("statechange",changed);changed();
+  });
+}
+async function showCachedVersion(worker,checked=false){
+  const info=await workerVersion(worker);
+  if(!info||!info.build)throw new Error("Invalid version");
+  const newer=info.build!==pageBuild;
+  applyUpdateBtn.hidden=!newer;
+  if(newer)updateStatus.textContent=info.version+" 的更新已完整缓存，点击刷新使用；当前页面不会自动刷新。";
+  else if(checked)updateStatus.textContent="已检查：当前 "+info.version+" 为最新版本，可离线使用。";
+}
+function watchRegistration(reg){
+  const watch=worker=>{if(worker)waitActivated(worker).then(()=>showCachedVersion(worker)).catch(()=>{});};
+  reg.addEventListener("updatefound",()=>watch(reg.installing));
+  watch(reg.installing||reg.waiting);
+  if(reg.active)showCachedVersion(reg.active).catch(()=>{});
+}
+async function registerUpdater(){
+  if(!swRegistration){
+    const reg=await navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"});
+    swRegistration=reg;watchRegistration(reg);
+  }
+  return swRegistration;
+}
+checkUpdateBtn.onclick=async()=>{
+  if(updateBusy)return;
+  if(!navigator.onLine){updateStatus.textContent="当前离线，无法检查更新；已有离线版本仍可使用。";return;}
+  updateBusy=true;checkUpdateBtn.disabled=true;updateStatus.textContent="正在检查并下载更新…";
+  try{
+    const reg=await registerUpdater();
+    let discovered=reg.installing||reg.waiting;
+    const found=()=>{discovered=reg.installing;};
+    reg.addEventListener("updatefound",found);
+    try{await Promise.race([reg.update(),new Promise((_,reject)=>setTimeout(()=>reject(new Error("Network timeout")),45000))]);}
+    finally{reg.removeEventListener("updatefound",found);}
+    const worker=discovered||reg.installing||reg.waiting||reg.active;
+    await waitActivated(worker);
+    await showCachedVersion(worker,true);
+  }catch(e){updateStatus.textContent="未能完成更新检查，请联网后重试；已有离线版本仍可使用。";}
+  finally{updateBusy=false;checkUpdateBtn.disabled=false;}
+};
+applyUpdateBtn.onclick=()=>location.reload();
 if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)){
-  addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+  navigator.serviceWorker.addEventListener("controllerchange",()=>showCachedVersion(navigator.serviceWorker.controller).catch(()=>{}));
+  addEventListener("load",()=>registerUpdater().catch(()=>{updateStatus.textContent="暂未建立离线缓存，请联网后点击检查更新重试。";}));
+}else{
+  checkUpdateBtn.disabled=true;updateStatus.textContent="本地文件或当前浏览器不支持在线更新，请打开网站检查新版。";
 }
 </script>
 </body>

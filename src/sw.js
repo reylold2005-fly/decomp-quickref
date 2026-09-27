@@ -1,5 +1,5 @@
-// Offline release: V1.5, build c0f1aecb39b4.
-const BUILD = "c0f1aecb39b4", VERSION = "V1.5";
+// Offline release: __APP_VERSION__, build __BUILD_ID__.
+const BUILD = "__BUILD_ID__", VERSION = "__APP_VERSION__";
 const CACHE = "decomp-" + BUILD;
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-180.png"];
 self.addEventListener("install", e => {

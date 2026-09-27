@@ -1,6 +1,6 @@
 # Current state
 
-Status date: 2026-09-27. Current release: v0.6 PWA.
+Status date: 2026-09-27. Current release: V1.5 PWA.
 
 ## Delivery
 
@@ -16,7 +16,7 @@ Status date: 2026-09-27. Current release: v0.6 PWA.
 - `archify/gen-dg.mjs` and `archify/spec-*.json` preserve the decision-diagram source.
 - `build.mjs` produces the standalone file and `dist/site` deployment directory.
 
-The web application makes no external requests after installation and can be added to the iPad home screen. Embedded decision diagrams use `DecompressionStream`, requiring iOS 16.4 or a recent desktop browser. The HP and Pages copies are two delivery paths for the same static artifact; they are not separate data sources.
+The web application can operate offline after installation and can be added to the iPad home screen. Opening the online site registers/checks its service worker; V1.5 also provides a manual update check. Complete new releases are cached before offering a user-triggered refresh. Failed downloads preserve the prior working offline release. Embedded decision diagrams use `DecompressionStream`, requiring iOS 16.4 or a recent desktop browser. The HP and Pages copies are two delivery paths for the same static artifact; they are not separate data sources.
 
 ## Data verification boundary
 

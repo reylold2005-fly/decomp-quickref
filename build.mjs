@@ -26,8 +26,12 @@ for (const [key, n] of Object.entries(CHARTS)) {
   }
 }
 
+const version = html.match(/name="app-version" content="([^"]+)"/)[1];
+const swTemplate = readFileSync(join(root, "src/sw.js"), "utf8");
+const hash = createHash("sha256").update(html).update(swTemplate).digest("hex").slice(0, 12);
+html = html.replaceAll("__BUILD_ID__", hash);
 mkdirSync(join(root, "dist"), { recursive: true });
-const out = join(root, "dist/释压程序速查_v0.6.html");
+const out = join(root, `dist/释压程序速查_${version}.html`);
 writeFileSync(out, html);
 console.log("built:", out, (html.length / 1024 / 1024).toFixed(2), "MB");
 
@@ -51,29 +55,5 @@ writeFileSync(join(site, "manifest.webmanifest"), JSON.stringify({
     { src: "icon-512.png", sizes: "512x512", type: "image/png" },
   ],
 }, null, 2));
-const hash = createHash("sha256").update(html).digest("hex").slice(0, 12);
-writeFileSync(join(site, "sw.js"), `// 释压速查 离线缓存 · 构建指纹 ${hash}
-const CACHE = "decomp-${hash}";
-const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-180.png"];
-self.addEventListener("install", e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
-});
-self.addEventListener("activate", e => {
-  e.waitUntil(caches.keys()
-    .then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))
-    .then(() => self.clients.claim()));
-});
-self.addEventListener("fetch", e => {
-  if (e.request.method !== "GET") return;
-  e.respondWith(
-    caches.match(e.request, { ignoreSearch: true }).then(r => r || fetch(e.request).then(res => {
-      if (res.ok && new URL(e.request.url).origin === location.origin) {
-        const cp = res.clone();
-        caches.open(CACHE).then(c => c.put(e.request, cp));
-      }
-      return res;
-    }))
-  );
-});
-`);
+writeFileSync(join(site, "sw.js"), swTemplate.replaceAll("__BUILD_ID__", hash).replaceAll("__APP_VERSION__", version));
 console.log("site :", site, "(cache", hash + ")");
