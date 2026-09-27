@@ -140,6 +140,12 @@ footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink2);padd
 .apt-panel .row:last-child{border-bottom:none}
 .chartbadge{font-family:var(--mono);font-size:10.5px;font-weight:700;background:var(--green-soft);color:var(--green);border-radius:6px;padding:1px 6px}
 @media(max-width:700px){
+  header.app .bar{flex-wrap:wrap}
+  header.app .bar>div:nth-child(2){flex:1;min-width:200px}
+  header.app .bar .spacer{display:none}
+  #themeBtn{order:1;flex:none}
+  #effPill{order:2;margin-left:44px;white-space:normal}
+
   .seg-title{font-size:16px}
   .descent .alt{font-size:27px}
   iframe.dg{height:440px}
@@ -165,21 +171,22 @@ footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink2);padd
 <main class="wrap">
 
   <section class="card">
-    <h2><span class="n">1</span>我在哪 —— 输入前后航路点(跨图自动切换),或点选航段</h2>
+    <h2><span class="n">1</span>我在哪 —— 输入航路点或航路编号,也可输入前后两点</h2>
     <div class="loc-row">
       <div class="fld">
-        <label>已飞过 / 靠后的点</label>
-        <input id="fixA" placeholder="如 OKTAT" autocomplete="off" spellcheck="false">
+        <label>航路点 / 航路编号</label>
+        <input id="fixA" placeholder="如 KESUM、R229" autocomplete="off" spellcheck="false">
         <div class="sugg" id="suggA"></div>
       </div>
       <div class="arrow">→</div>
       <div class="fld">
-        <label>将飞往 / 靠前的点</label>
+        <label>另一航路点(可选)</label>
         <input id="fixB" placeholder="如 BEKIR" autocomplete="off" spellcheck="false">
         <div class="sugg" id="suggB"></div>
       </div>
       <button class="btn solid" id="goBtn" style="align-self:flex-end;height:44px">查程序</button>
     </div>
+    <div class="hint" id="lookupNote" role="status" style="margin-top:8px">单点查询显示相关航段;交界点或航路编号可能对应多个程序,请结合所在区间选择。</div>
     <div class="chips" id="segChips"></div>
   </section>
 
@@ -295,8 +302,8 @@ footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink2);padd
         {"from":"TISUP","to":"DEKAN","awy":"L158","dist":"95 (3353)","seg":6},
         {"from":"GINOM","to":"TR","awy":"A308","dist":"163 (3476)","seg":5},
         {"from":"TOVMO","to":"GINOM","awy":"Y684","dist":"241 (4020)","seg":4},
-        {"from":"KESUM","to":"D208G","awy":"R104","dist":"208 (3628)","seg":10},
-        {"from":"GINOM","to":"KESUM","awy":"","dist":"","seg":10},
+        {"from":"GINOM","to":"D208G","awy":"R104","dist":"208 (3628)","seg":10},
+        {"from":"D208G","to":"ABK","awy":"","dist":"","seg":0,"color":"dark"},
         {"from":"KESUM","to":"IVRAS","awy":"R372","dist":"147 (3415)","seg":9},
         {"from":"KESUM","to":"ABUSA","awy":"R229","dist":"238 (3871)","seg":8},
         {"from":"ABUSA","to":"MATAK","awy":"R229","dist":"80 (3871)","seg":7},
@@ -459,18 +466,18 @@ footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink2);padd
           ]
         },
         {
-          "seq":10,"from":"D208G","to":"GINOM","via":["KESUM"],"initAlt":13000,
+          "seq":10,"from":"D208G","to":"GINOM","initAlt":13000,
           "options":[
             {"n":1,"sum":"经D208G后降10000,沿航路返回备降","alts":["UNAA","UNNT"],"lvl":10000,
              "raw":"经D208G点后下降高度至10000FT,沿航路返回UNAA/UNNT备降;",
-             "anim":[["EVT",35000],["EVT>D208G:0.5",13000],["D208G",13000],["D208G>UNAA:0.4",10000],["UNAA",0]],
-             "animAlt":{"UNNT":[["EVT",35000],["EVT>D208G:0.5",13000],["D208G",13000],["D208G>UNNT:0.4",10000],["UNNT",0]]}},
+             "anim":[["EVT",35000],["EVT>D208G:0.5",13000],["D208G",13000],["D208G>ABK:0.4",10000],["ABK",10000],["UNAA",0]],
+             "animAlt":{"UNNT":[["EVT",35000],["EVT>D208G:0.5",13000],["D208G",13000],["D208G>ABK:0.4",10000],["ABK",10000],["UNNT",0]]}},
             {"n":2,"sum":"经D208G后降10000,沿航路前往备降","alts":["UNKL"],"lvl":10000,
              "raw":"或经D208G点后下降高度至10000FT,沿航路前往UNKL备降;",
-             "anim":[["EVT",35000],["EVT>D208G:0.5",13000],["D208G",13000],["D208G>UNKL:0.5",10000],["UNKL",0]]},
+             "anim":[["EVT",35000],["EVT>D208G:0.5",13000],["D208G",13000],["D208G>ABK:0.5",10000],["ABK",10000],["UNKL",0]]},
             {"n":3,"sum":"经D208G后降10000,经MIKET·NEBOK·BD前往备降","alts":["UIII"],"lvl":10000,
              "raw":"或经D208G点后下降高度至10000FT,沿航路经MIKET NEBOK BD前往UIII备降。",
-             "anim":[["EVT",35000],["EVT>D208G:0.5",13000],["D208G",13000],["MIKET",10000],["NEBOK",10000],["BD",10000],["UIII",0]]}
+             "anim":[["EVT",35000],["EVT>D208G:0.5",13000],["D208G",13000],["ABK",10000],["MIKET",10000],["NEBOK",10000],["BD",10000],["UIII",0]]}
           ]
         }
       ]
@@ -904,7 +911,7 @@ footer{margin-top:22px;text-align:center;font-size:11.5px;color:var(--ink2);padd
     {"item":"D527-1 距离","val":"69(3323)/51(3384)/219(3102)/193(3116)","conf":"高(待用户复核)"},
     {"item":"D501 程序文字(10航段全部方案)","val":"按高清截图录入,含④段红字14000ft、⑧段'直飞NEBOK'、D70T/D208G两条注记","conf":"高(待用户复核)"},
     {"item":"D501 航段距离","val":"171(3540)/216(3353)/35(3171)/197(3750)/70(3200)/100(3353)/95(3353)/163(3476)/241(4020)/208(3628)/147(3415)/238(3871)/80(3871)","conf":"高(待用户复核)"},
-    {"item":"D501 图面连线","val":"已按用户提供高清图全部重画:R104=GINOM–KESUM–D208G已确认;蓝虚线ABK–MIKET、MATAK–LETBI–TOVMO已确认","conf":"✅ 按高清图重画(2026-09-15)"},
+    {"item":"D501 图面连线","val":"2026-09-27 按用户截图纠正:R104 为 GINOM–D208G,再连接 ABK;KESUM 经 R372 连接 IVRAS,不经过 GINOM–D208G;蓝虚线ABK–MIKET、MATAK–LETBI–TOVMO已确认","conf":"✅ 按用户截图复核(2026-09-27)"},
     {"item":"D501 剩余待核连线","val":"UNAA–UNNT、MIKET–NEBOK 两条蓝虚线为推定","conf":"低 ⚠ 请核对"},
     {"item":"D501 机场中文名","val":"UNKL克拉斯诺亚尔斯克/UNAA阿巴坎/UNNT新西伯利亚/UIII伊尔库茨克/ZMCK乌兰巴托(参考,非原图内容)","conf":"中"},
     {"item":"D574-1 程序文字(6航段全部方案)","val":"含②方案1(UBBG、UBBQ)与③方案2表述","conf":"✅ 已复核(用户 2026-09-15)"},
@@ -1011,6 +1018,7 @@ function renderTabs(){
 }
 function switchChart(i,keepInputs){
   ci=i; resetPlayback();
+  $("#lookupNote").textContent="单点查询显示相关航段;交界点或航路编号可能对应多个程序,请结合所在区间选择。";
   const russian = ["D501","D527-1"].includes(chart().id);
   $("#rvsmRussia").style.display=russian?"":"none";
   $("#rvsmGeneric").style.display=russian?"none":"";
@@ -1127,7 +1135,10 @@ function drawEvt(seq){
 
 /* ── fix inputs (cross-chart) ── */
 const allFixes=[];
-DATA.charts.forEach((c,i)=>c.route.forEach(f=>allFixes.push({f,chart:i,tag:c.id})));
+DATA.charts.forEach((c,i)=>{
+  const names=[...c.route,...Object.keys(c.lookupFixes||{}),...c.legs.map(l=>l.awy).filter(Boolean)];
+  [...new Set(names)].forEach(f=>allFixes.push({f,chart:i,tag:c.id}));
+});
 function attachSugg(inp,box){
   inp.addEventListener("input",()=>{
     const v=inp.value.trim().toUpperCase();
@@ -1146,7 +1157,19 @@ function attachSugg(inp,box){
 }
 attachSugg($("#fixA"),$("#suggA"));attachSugg($("#fixB"),$("#suggB"));
 $("#goBtn").onclick=tryLocate;
+function pointSegs(c,query){
+  const extra=c.lookupFixes&&c.lookupFixes[query];
+  if(extra)return extra.segments;
+  const airway=c.legs.filter(l=>l.awy===query&&l.seg>0).map(l=>l.seg);
+  if(airway.length)return [...new Set(airway)].sort((a,b)=>a-b);
+  return c.segments.filter(s=>[s.from,...(s.via||[]),s.to].includes(query)).map(s=>s.seq);
+}
 function findSegs(c,a,b){
+  if(!a||!b||a===b)return pointSegs(c,a||b);
+  if((c.lookupFixes&& (c.lookupFixes[a]||c.lookupFixes[b])) || c.legs.some(l=>l.awy===a||l.awy===b)){
+    const bs=pointSegs(c,b);
+    return pointSegs(c,a).filter(n=>bs.includes(n));
+  }
   const adj=c.segments.filter(s=>{
     const set=[s.from,...(s.via||[]),s.to];
     return set.includes(a)&&set.includes(b);
@@ -1164,19 +1187,44 @@ function findSegs(c,a,b){
 }
 function tryLocate(){
   const a=$("#fixA").value.trim().toUpperCase(), b=$("#fixB").value.trim().toUpperCase();
-  if(!a||!b)return;
+  if(!a&&!b)return;
   let found=null;
+  const matches=[];
   for(let k=0;k<DATA.charts.length;k++){
     const idx=(ci+k)%DATA.charts.length;
     const segs=findSegs(DATA.charts[idx],a,b);
-    if(segs.length){found={idx,segs};break;}
+    if(segs.length)matches.push({idx,segs});
   }
   resetPlayback();
+  gTop.innerHTML="";
+  $$("#segChips .chip").forEach(c=>c.classList.remove("active"));
+  $$(".leg").forEach(l=>{l.classList.remove("active");l.classList.remove("dim");});
+  if(matches.length>1){
+    $("#lookupNote").textContent="查询匹配到多张航图,请选择适用航图;不会自动选用其中一张。";
+    $("#segCards").innerHTML="";
+    matches.forEach(m=>{
+      const button=document.createElement("button");button.className="btn ghost";
+      button.textContent=DATA.charts[m.idx].tab+" · 航段 "+m.segs.map(n=>CIRC[n-1]).join("、");
+      button.onclick=()=>showLookup(m,a,b);
+      $("#segCards").appendChild(button);
+    });
+    return;
+  }
+  found=matches[0];
   if(!found){
+    $("#lookupNote").textContent="未收录或无法确认该区间。请查询原图上的相邻两点,或输入航路编号查看候选程序。未收录的点不会按名称或方位自动推定。";
     $("#segCards").innerHTML=`<section class="card"><div class="hint">⚠ 未匹配到航段。可用航路点:<br>${DATA.charts.map(c=>`<b>${c.id}</b>:${c.route.join(" · ")}`).join("<br>")}</div></section>`;
     return;
   }
+  showLookup(found,a,b);
+}
+function showLookup(found,a,b){
   if(found.idx!==ci)switchChart(found.idx,true);
+  const c=chart(), queries=[...new Set([a,b].filter(Boolean))];
+  const explanations=queries.filter(q=>c.lookupFixes&&c.lookupFixes[q]).map(q=>q+"："+c.lookupFixes[q].note);
+  $("#lookupNote").textContent=explanations.join("；")+(explanations.length?"。":"")+
+    (found.segs.length>1?"匹配多个航段,请按所在区间选择,不能仅凭交界点或航路编号确定唯一程序。":"匹配 "+c.id+" 第"+CIRC[found.segs[0]-1]+"段。")+
+    "动画起点为程序航段示意位置。";
   if(found.segs.length===1)selectSeg(found.segs[0],true);
   else{
     renderSegCards(found.segs);
@@ -1185,7 +1233,7 @@ function tryLocate(){
       l.classList.toggle("active",found.segs.includes(+l.dataset.seg));
       l.classList.toggle("dim",!found.segs.includes(+l.dataset.seg));
     });
-    drawEvt(found.segs[0]);
+    gTop.innerHTML="";
   }
 }
 

@@ -1,6 +1,6 @@
 # Current state
 
-Status date: 2026-09-22. Current release: v0.6 PWA.
+Status date: 2026-09-27. Current release: v0.6 PWA.
 
 ## Delivery
 
@@ -18,6 +18,9 @@ Status date: 2026-09-22. Current release: v0.6 PWA.
 The web application makes no external requests after installation and can be added to the iPad home screen. Embedded decision diagrams use `DecompressionStream`, requiring iOS 16.4 or a recent desktop browser. The HP and Pages copies are two delivery paths for the same static artifact; they are not separate data sources.
 
 ## Data verification boundary
+
+- 2026-09-27: user screenshot and correction confirm GINOM → D208G → ABK; KESUM → IVRAS remains R372. Removed the incorrect KESUM detour from D501 segment 10 and added ABK to its animations. Original altitudes and procedure text remain unchanged.
+- Search accepts one waypoint or an airway number and lists matching sections; cross-chart matches require chart selection. Supplemental waypoints use explicit `lookupFixes` mappings with source notes, never invented map coordinates or inferred route ordering. EKVER's exact KESUM–ABUSA membership is awaiting user confirmation; it is not yet auto-matched.
 
 - D574-1 program text and distances were recorded as user-verified on 2026-09-15.
 - D501 and D574-2 still contain items marked for verification.

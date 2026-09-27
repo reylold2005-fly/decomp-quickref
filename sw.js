@@ -1,5 +1,5 @@
-// 释压速查 离线缓存 · 构建指纹 3cfb440255f0
-const CACHE = "decomp-3cfb440255f0";
+// 释压速查 离线缓存 · 构建指纹 8c70707fdb95
+const CACHE = "decomp-8c70707fdb95";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-180.png"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
